@@ -17,7 +17,6 @@ Discordeno is a small framework to help speed up the development of your discord
 - More automation(e.g specify paths to files and load all of them)
 - Docs(Basics implemented)
 - Custom prefixing per command
-- nest.land entry
 
 ### Examples
 

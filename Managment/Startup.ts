@@ -24,11 +24,9 @@ export const startup = (token: string, prefix: string) => {
           commands.map((cmd) => {
             if (cmd.command == CommandName) {
               logger.info(
-                `running ${cmd.command} in ${
-                  cache.guilds.get(msg.guildID)?.name
-                }(channel is ${cache.channels.get(msg.channelID)?.name}) for ${
-                  msg.author.username
-                }`
+                `running ${cmd.command} in ${cache.guilds.get(msg.guildID)
+                  ?.name}(channel is ${cache.channels.get(msg.channelID)
+                  ?.name}) for ${msg.author.username}`,
               );
               cmd.runs(msg, Args);
             } else if (
@@ -36,11 +34,9 @@ export const startup = (token: string, prefix: string) => {
               arrayContains(CommandName, cmd.aliases)
             ) {
               logger.info(
-                `running ${cmd.command} in ${
-                  cache.guilds.get(msg.guildID)?.name
-                }(channel is ${cache.channels.get(msg.channelID)?.name}) for ${
-                  msg.author.username
-                }`
+                `running ${cmd.command} in ${cache.guilds.get(msg.guildID)
+                  ?.name}(channel is ${cache.channels.get(msg.channelID)
+                  ?.name}) for ${msg.author.username}`,
               );
               cmd.runs(msg, Args);
             }

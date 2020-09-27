@@ -10,7 +10,7 @@ import { sendMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/c
  */
 export const createHelpCommand = (
   commandPrefix: string,
-  aliases?: string[]
+  aliases?: string[],
 ) => {
   createCommand({
     command: commandPrefix,

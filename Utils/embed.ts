@@ -30,34 +30,39 @@ class MessageEmbed {
     return this;
   }
   setAuthor(name: string, url: string) {
-    if (name.length > 256)
+    if (name.length > 256) {
       throw new RangeError(
-        "Embed author names may not be longer than 256 characters!"
+        "Embed author names may not be longer than 256 characters!",
       );
+    }
 
     this.author = { name: name, icon_url: url };
     return this;
   }
   setFooter(text: string, url: string) {
-    if (text.length > 2048)
+    if (text.length > 2048) {
       throw new RangeError(
-        "Embed footer texts may not be longer than 2048 characters!"
+        "Embed footer texts may not be longer than 2048 characters!",
       );
+    }
 
     this.footer = { text: text, icon_url: url };
     return this;
   }
   addField(name: string, value: string, inline?: boolean) {
-    if (this.fields.length > 24)
+    if (this.fields.length > 24) {
       throw new RangeError("Embeds do not support more than 25 fields!");
-    if (name.length > 256)
+    }
+    if (name.length > 256) {
       throw new RangeError(
-        "Embed field names may not be longer than 256 characters!"
+        "Embed field names may not be longer than 256 characters!",
       );
-    if (value.length > 1024)
+    }
+    if (value.length > 1024) {
       throw new RangeError(
-        "Embed field values may not be longer than 1024 characters!"
+        "Embed field values may not be longer than 1024 characters!",
       );
+    }
 
     this.fields.push({ name: name, value: value, inline: inline || false });
     return this;
@@ -67,33 +72,36 @@ class MessageEmbed {
     return this;
   }
   setTitle(title: string) {
-    if (title.length > 256)
+    if (title.length > 256) {
       throw new RangeError(
-        "Embed titles may not be longer than 256 characters!"
+        "Embed titles may not be longer than 256 characters!",
       );
+    }
 
     this.title = title;
     return this;
   }
   setDescription(text: string) {
-    if (text.length > 2048)
+    if (text.length > 2048) {
       throw new RangeError(
-        "Embed descriptions may not be longer than 2048 characters!"
+        "Embed descriptions may not be longer than 2048 characters!",
       );
+    }
 
     this.description = text;
     return this;
   }
   setColor(color: any) {
     if (typeof color === "string") {
-      if (color === "RANDOM")
+      if (color === "RANDOM") {
         color = Math.floor(Math.random() * (0xffffff + 1));
-      else color = parseInt(color.replace("#", ""), 16);
+      } else color = parseInt(color.replace("#", ""), 16);
     }
-    if (color < 0 || color > 0xffffff)
+    if (color < 0 || color > 0xffffff) {
       throw new RangeError("Color out of range (0 - FFFFFF)!");
-    else if (color && isNaN(color))
+    } else if (color && isNaN(color)) {
       throw new TypeError("Could not convert to color!");
+    }
 
     this.color = color;
     return this;
