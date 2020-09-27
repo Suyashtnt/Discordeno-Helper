@@ -1,3 +1,3 @@
-import { command } from "../types/command.ts";
+import { command } from "../Types/command.ts";
 
 export let commands: command[] = [];

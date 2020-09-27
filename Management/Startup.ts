@@ -1,5 +1,5 @@
 import * as deps from "../deps.ts";
-import { commands } from "../storage/commands.ts";
+import { commands } from "../Storage/commands.ts";
 
 export const startup = (token: string, prefix: string) => {
   deps.StartBot({

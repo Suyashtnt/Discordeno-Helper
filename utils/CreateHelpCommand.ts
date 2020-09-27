@@ -1,4 +1,4 @@
-import { commands } from "../storage/commands.ts";
+import { commands } from "../Storage/commands.ts";
 import { createCommand } from "./CreateCommand.ts";
 import { MessageEmbed } from "./embed.ts";
 import { sendMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts";

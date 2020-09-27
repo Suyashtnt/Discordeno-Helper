@@ -1,3 +1,3 @@
-import { createHelpCommand } from "../../../utils/CreateHelpCommand.ts";
+import { createHelpCommand } from "../../../Utils/CreateHelpCommand.ts";
 
 export default createHelpCommand("help");
