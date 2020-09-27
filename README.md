@@ -13,3 +13,7 @@ Discordeno is a small framework to help speed up the development of your discord
 - More automation(e.g specify paths to files and load all of them)
 - Docs
 - Custom prefixing per command
+
+### Examples
+
+Basic commands can be found in the `Tests` directory
