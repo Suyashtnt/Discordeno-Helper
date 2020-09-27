@@ -3,6 +3,11 @@ import { createCommand } from "./CreateCommand.ts";
 import { MessageEmbed } from "./embed.ts";
 import { sendMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts";
 
+/**
+ * Creates a generative help command so you dont have to manually manage enteries or make one by yourself
+ * @param commandPrefix The prefix for the help command
+ * @param aliases Aliases for the help command
+ */
 export const createHelpCommand = (
   commandPrefix: string,
   aliases?: string[]

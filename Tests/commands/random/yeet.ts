@@ -5,7 +5,7 @@ export default createCommand({
   command: "yeet",
   desc: "YEET!",
   args: ["[person to YEET]"],
-  aliases: ["y"],
+  aliases: ["y", "byebye"],
   runs: (msg, args) => {
     if (args != null && args[0] != undefined)
       sendMessage(msg.channelID, `yeeted ${args[0]}`);

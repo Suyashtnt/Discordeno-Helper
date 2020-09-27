@@ -1,6 +1,11 @@
 import * as deps from "../deps.ts";
 import { commands } from "../Storage/commands.ts";
 
+/**
+ * Starts up your bot
+ * @param token Your Bot Token
+ * @param prefix The Bots prefix
+ */
 export const startup = (token: string, prefix: string) => {
   deps.StartBot({
     token,
