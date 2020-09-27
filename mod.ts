@@ -1,2 +1,4 @@
-export { startup } from "./Management/Startup.ts";
-export { createCommand } from "./utils/CreateCommand.ts";
+export { startup } from "./Managment/Startup.ts";
+export { createCommand } from "./Utils/CreateCommand.ts";
+export { createHelpCommand } from "./Utils/CreateHelpCommand.ts";
+export { MessageEmbed } from "./Utils/embed.ts";
