@@ -7,4 +7,4 @@ cmds;
 const env = config();
 db.connect(env.MONGOURL);
 
-startup(env.TOKEN, "test.", true);
+startup(env.TOKEN, "test.", "730853325418922095", true);

@@ -3,14 +3,21 @@ import { commands } from "../Storage/commands.ts";
 import { Logger } from "https://deno.land/x/optic/mod.ts";
 import { cache } from "discordeno/utils/cache.ts";
 import { db } from "../mod.ts";
+import { sendMessage } from "discordeno/handlers/channel.ts";
 const logger = new Logger();
 /**
  * Starts up your bot
  * @param token Your Bot Token
  * @param prefix The Bots prefix
+ * @param botID your bots id
  * @param useMongo If you are using the MongoDB prefix manager
  */
-export const startup = (token: string, pf: string, useMongo: boolean) => {
+export const startup = (
+  token: string,
+  pf: string,
+  botID: string,
+  useMongo: boolean
+) => {
   deps.StartBot({
     token,
     intents: [deps.Intents.GUILD_MESSAGES, deps.Intents.GUILDS],
@@ -19,7 +26,6 @@ export const startup = (token: string, pf: string, useMongo: boolean) => {
       messageCreate: async (msg) => {
         const dbGet = await db.getPrefix(msg.guildID);
         let prefix: string = useMongo ? (dbGet ? dbGet : pf) : pf;
-        console.log(prefix);
 
         const splitableMsg = msg.content.replace(prefix, "");
         const CommandName = splitableMsg.split(" ")[0];
@@ -51,10 +57,14 @@ export const startup = (token: string, pf: string, useMongo: boolean) => {
               cmd.runs(msg, Args);
             }
           });
+        } else if (msg.mentions[0] === botID) {
+          sendMessage(msg.channelID, `the bot prefix is \`${prefix}\``);
         }
       },
       guildCreate: (guild) => {
-        db.setPrefix(pf, guild.id);
+        if (useMongo) {
+          db.setPrefix(pf, guild.id);
+        }
       },
     },
   });

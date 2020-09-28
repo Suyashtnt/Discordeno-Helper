@@ -9,6 +9,8 @@ Discordeno is a small framework to help speed up the development of your discord
 - A command handler
 - Embed generator
 - Help command generator
+- Ping for prefix
+- Prefix handler
 - More to come
 
 ### TODO
