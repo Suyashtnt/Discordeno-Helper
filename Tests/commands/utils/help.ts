@@ -1,3 +1,3 @@
-import { createHelpCommand } from "../../../mod.ts";
+import { createHelpCommand } from '../../../mod.ts';
 
-export default createHelpCommand("help", ["h", "hlp"]);
+export default createHelpCommand('help', ['h', 'hlp']);

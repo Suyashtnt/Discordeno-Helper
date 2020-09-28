@@ -1,5 +1,5 @@
 {
-    "compilerOptions": {
-        "importsNotUsedAsValues": "preserve"
-    }
+	"compilerOptions": {
+		"importsNotUsedAsValues": "preserve"
+	}
 }
