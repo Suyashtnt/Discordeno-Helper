@@ -1,7 +1,7 @@
 {
 	"name": "discordeno-helper",
-	"description": "Discordeno framework for faster deveelopment",
-	"version": "1.0.1",
+	"description": "Discordeno framework for faster development",
+	"version": "1.0.2",
 	"files": [
 		"./Utils/**/*",
 		"./Types/**/*",
@@ -16,7 +16,7 @@
 		"/mod.ts"
 	],
 	"ignore": [".git"],
-	"entry": "/mod.ts",
+	"entry": "./mod.ts",
 	"checkAll": true,
 	"repository": "https://github.com/Suyashtnt/Discordeno-Helper",
 	"unlisted": false
