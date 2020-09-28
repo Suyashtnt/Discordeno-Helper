@@ -13,7 +13,7 @@ Discordeno is a small framework to help speed up the development of your discord
 
 ### TODO
 
-- custom prefix handler(via mongodb?)
+- Permission manager
 - More automation(e.g specify paths to files and load all of them)
 - Docs(Basics implemented)
 - Custom prefixing per command
