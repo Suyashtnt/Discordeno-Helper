@@ -16,7 +16,7 @@
 		"/mod.ts"
 	],
 	"ignore": [".git"],
-	"entry": "./mod.ts",
+	"entry": "/mod.ts",
 	"checkAll": true,
 	"repository": "https://github.com/Suyashtnt/Discordeno-Helper",
 	"unlisted": false
