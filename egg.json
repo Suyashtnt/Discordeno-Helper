@@ -1,7 +1,6 @@
 {
 	"name": "discordeno-helper",
 	"description": "Discordeno framework for faster deveelopment",
-	"stable": true,
 	"version": "0.1.2",
 	"bump": "patch",
 	"files": [
@@ -14,7 +13,6 @@
 		"/mod.ts",
 		"./README.md",
 		"/db/**/*",
-		"./importmap.json",
 		"./tsconfig.json"
 	],
 	"ignore": [".git"],
