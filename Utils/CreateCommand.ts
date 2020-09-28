@@ -1,5 +1,5 @@
 import { commands } from "../Storage/commands.ts";
-import { command } from "../Types/command.ts";
+import type { command } from "../Types/command.ts";
 
 /**
  * Adds a command

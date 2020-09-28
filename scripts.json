@@ -2,7 +2,7 @@
   "$schema": "https://deno.land/x/denon/schema.json",
   "scripts": {
     "start": {
-      "cmd": "deno run --allow-net --allow-read tests/mod.ts",
+      "cmd": "deno run --allow-net --allow-write --allow-read --allow-plugin --unstable --config=tsconfig.json --importmap=importmap.json tests/mod.ts",
       "desc": "run my app.ts file"
     }
   },

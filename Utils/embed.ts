@@ -1,11 +1,11 @@
-import {
+import type {
   EmbedImage,
   EmbedThumbnail,
   EmbedAuthor,
   EmbedField,
   EmbedFooter,
   Embed,
-} from "https://x.nest.land/Discordeno@9.0.1/src/types/message.ts";
+} from "discordeno/types/message.ts";
 
 /**
  * Embed generator.
@@ -32,7 +32,7 @@ class MessageEmbed {
   setAuthor(name: string, url: string) {
     if (name.length > 256) {
       throw new RangeError(
-        "Embed author names may not be longer than 256 characters!",
+        "Embed author names may not be longer than 256 characters!"
       );
     }
 
@@ -42,7 +42,7 @@ class MessageEmbed {
   setFooter(text: string, url: string) {
     if (text.length > 2048) {
       throw new RangeError(
-        "Embed footer texts may not be longer than 2048 characters!",
+        "Embed footer texts may not be longer than 2048 characters!"
       );
     }
 
@@ -55,12 +55,12 @@ class MessageEmbed {
     }
     if (name.length > 256) {
       throw new RangeError(
-        "Embed field names may not be longer than 256 characters!",
+        "Embed field names may not be longer than 256 characters!"
       );
     }
     if (value.length > 1024) {
       throw new RangeError(
-        "Embed field values may not be longer than 1024 characters!",
+        "Embed field values may not be longer than 1024 characters!"
       );
     }
 
@@ -74,7 +74,7 @@ class MessageEmbed {
   setTitle(title: string) {
     if (title.length > 256) {
       throw new RangeError(
-        "Embed titles may not be longer than 256 characters!",
+        "Embed titles may not be longer than 256 characters!"
       );
     }
 
@@ -84,7 +84,7 @@ class MessageEmbed {
   setDescription(text: string) {
     if (text.length > 2048) {
       throw new RangeError(
-        "Embed descriptions may not be longer than 2048 characters!",
+        "Embed descriptions may not be longer than 2048 characters!"
       );
     }
 

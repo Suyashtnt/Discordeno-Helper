@@ -13,11 +13,11 @@
     "./mod.ts",
     "/mod.ts",
     "./README.md",
-    "/mod.ts"
+    "/db/**/*",
+    "./importmap.json",
+    "./tsconfig.json"
   ],
-  "ignore": [
-    ".git"
-  ],
+  "ignore": [".git"],
   "entry": "/mod.ts",
   "checkAll": true,
   "repository": "https://github.com/Suyashtnt/Discordeno-Helper",
