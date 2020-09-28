@@ -1,7 +1,7 @@
 import { createCommand } from "./CreateCommand.ts";
-import { sendMessage } from "discordeno/handlers/channel.ts";
+import { sendMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts";
 import * as db from "../db/db.ts";
-import type { MessageContent } from "discordeno/types/channel.ts";
+import type { MessageContent } from "https://x.nest.land/Discordeno@9.0.1/src/types/channel.ts";
 
 /**
  * Creates a Prefix command for you

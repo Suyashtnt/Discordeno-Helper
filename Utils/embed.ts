@@ -5,7 +5,7 @@ import type {
   EmbedField,
   EmbedFooter,
   Embed,
-} from "discordeno/types/message.ts";
+} from "https://x.nest.land/Discordeno@9.0.1/src/types/message.ts";
 
 /**
  * Embed generator.
