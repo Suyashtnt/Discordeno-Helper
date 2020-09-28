@@ -1,8 +1,7 @@
 {
 	"name": "discordeno-helper",
 	"description": "Discordeno framework for faster deveelopment",
-	"version": "0.1.2",
-	"bump": "patch",
+	"version": "1.0.1",
 	"files": [
 		"./Utils/**/*",
 		"./Types/**/*",
@@ -13,10 +12,10 @@
 		"/mod.ts",
 		"./README.md",
 		"/db/**/*",
-		"./tsconfig.json"
+		"./tsconfig.json",
+		"/mod.ts"
 	],
 	"ignore": [".git"],
-	"checkFormat": "npx prettier . --write",
 	"entry": "/mod.ts",
 	"checkAll": true,
 	"repository": "https://github.com/Suyashtnt/Discordeno-Helper",
