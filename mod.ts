@@ -7,3 +7,4 @@ export type { command } from './Types/command.ts';
 export { commands } from './Storage/commands.ts';
 export type { PrefixSchema } from './db/schemas/prefix.ts';
 export * as db from './db/db.ts';
+export { importDirectory } from './Utils/ImportFromDir.ts';
