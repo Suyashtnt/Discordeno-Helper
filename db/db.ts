@@ -36,7 +36,7 @@ export const setPrefix = async (prefix: string, guildID: string) => {
 };
 
 /**
- * Gets the prefix from the DB
+ * Gets the prefix =for a certain guild
  * @param guildID The guilds ID
  */
 export const getPrefix = async (guildID: string) => {
