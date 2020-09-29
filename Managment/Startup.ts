@@ -5,6 +5,8 @@ import { cache } from 'https://x.nest.land/Discordeno@9.0.1/src/utils/cache.ts';
 import { db } from '../mod.ts';
 import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts';
 const logger = new Logger();
+
+export let prefix: string;
 /**
  * Starts up your bot
  * @param token Your Bot Token
@@ -25,7 +27,7 @@ export const startup = (
 			ready: () => console.log('bot started!'),
 			messageCreate: async (msg) => {
 				const dbGet = await db.getPrefix(msg.guildID);
-				let prefix: string = useMongo ? (dbGet ? dbGet : pf) : pf;
+				prefix = useMongo ? (dbGet ? dbGet : pf) : pf;
 
 				const splitableMsg = msg.content.replace(prefix, '');
 				const CommandName = splitableMsg.split(' ')[0];

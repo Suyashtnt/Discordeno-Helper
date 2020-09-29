@@ -10,7 +10,7 @@
 		"./deps.ts",
 		"./mod.ts",
 		"./README.md",
-		"/db/**/*",
+		"./db/**/*",
 		"./tsconfig.json"
 	],
 	"ignore": [".git"],
