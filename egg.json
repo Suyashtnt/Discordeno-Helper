@@ -9,11 +9,9 @@
 		"./Managment/**/*",
 		"./deps.ts",
 		"./mod.ts",
-		"/mod.ts",
 		"./README.md",
 		"/db/**/*",
-		"./tsconfig.json",
-		"/mod.ts"
+		"./tsconfig.json"
 	],
 	"ignore": [".git"],
 	"entry": "/mod.ts",
