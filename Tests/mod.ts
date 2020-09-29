@@ -1,9 +1,8 @@
 import { db, startup } from '../mod.ts';
 import { config } from '../deps.ts';
+import { importDirectory } from '../Utils/ImportFromDir.ts';
 
-import * as cmds from './commands/index.ts';
-cmds;
-
+importDirectory(Deno.realPathSync('./Tests/commands/'));
 const env = config();
 db.connect(env.MONGOURL);
 
