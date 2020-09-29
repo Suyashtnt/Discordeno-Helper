@@ -1,4 +1,5 @@
 let uniqueFilePathCounter = 0;
+
 /**
  * loads all commands from that directory
  * @param path the path
@@ -10,6 +11,7 @@ export async function importDirectory(path: string) {
 		if (!file.name) continue;
 
 		const currentPath = `${path}/${file.name}`;
+
 		if (file.isFile) {
 			const cmd = await import(
 				`file:///${currentPath}#${uniqueFilePathCounter}`
@@ -17,7 +19,6 @@ export async function importDirectory(path: string) {
 			cmd;
 			continue;
 		}
-
 		importDirectory(currentPath);
 	}
 	uniqueFilePathCounter++;
