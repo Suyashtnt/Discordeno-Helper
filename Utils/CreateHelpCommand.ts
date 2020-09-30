@@ -22,33 +22,50 @@ export const createHelpCommand = (
 			const helpBody = new MessageEmbed();
 
 			helpBody.setTitle('All commands');
-
-			if (args && args[0]) {
-				if (arrayContains(args[0], commands)) {
+			if (args) {
+				if (args[0]) {
+					console.log(args[0]);
 					commands.map((val) => {
-						sendMessage(msg.channelID, {
-							embed: new MessageEmbed()
-								.setTitle(val.command + ' ' + val.args?.join(' '))
-								.setDescription(val.desc)
-								.addField(
-									'aliases',
-									val.aliases ? val.aliases?.join(' ') : 'none'
-								),
-						});
+						console.log(
+							(val.command === args[0] ||
+								(val.aliases ? val.aliases : '') === args[0]) +
+								' cmd name is' +
+								val.command
+						);
+
+						if (
+							val.command === args[0] ||
+							(val.aliases ? val.aliases : '') === args[0]
+						) {
+							sendMessage(msg.channelID, {
+								embed: new MessageEmbed()
+									.setTitle(
+										val.command + ' ' + (val.args ? val.args.join(' ') : '')
+									)
+									.setDescription(val.desc)
+									.addField(
+										'aliases',
+										val.aliases ? val.aliases?.join(', ') : 'none'
+									),
+							});
+						}
+					});
+				} else {
+					commands.map((val) => {
+						if (val.args) {
+							const args = val.args.join(' ');
+							helpBody.addField(
+								`\`${prefix}${val.command} ${args} \``,
+								val.desc
+							);
+						} else {
+							helpBody.addField(`\`${prefix}${val.command}\``, val.desc);
+						}
+					});
+					sendMessage(msg.channelID, {
+						embed: helpBody,
 					});
 				}
-			} else {
-				commands.map((val) => {
-					if (val.args) {
-						const args = val.args.join(' ');
-						helpBody.addField(`\`${prefix}${val.command} ${args} \``, val.desc);
-					} else {
-						helpBody.addField(`\`${prefix}${val.command}\``, val.desc);
-					}
-				});
-				sendMessage(msg.channelID, {
-					embed: helpBody,
-				});
 			}
 		},
 	});
