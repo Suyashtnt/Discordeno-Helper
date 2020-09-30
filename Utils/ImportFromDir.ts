@@ -5,21 +5,22 @@ let uniqueFilePathCounter = 0;
  * @param path the path
  */
 export async function importDirectory(path: string) {
-  const files = Deno.readDirSync(Deno.realPathSync(path));
+	const files = Deno.readDirSync(Deno.realPathSync(path));
 
-  for (const file of files) {
-    if (!file.name) continue;
+	for (const file of files) {
+		if (!file.name) continue;
 
-    const currentPath = `${path}/${file.name}`;
+		const currentPath = `${path}/${file.name}`;
 
-    if (file.isFile) {
-      const cmd = await import(
-        `file:///${currentPath}#${uniqueFilePathCounter}`
-      );
-      cmd;
-      continue;
-    }
-    importDirectory(currentPath);
-  }
-  uniqueFilePathCounter++;
+		if (file.isFile) {
+			// deno-lint-ignore no-undef
+			const cmd = await import(
+				`file:///${currentPath}#${uniqueFilePathCounter}`
+			);
+			cmd;
+			continue;
+		}
+		importDirectory(currentPath);
+	}
+	uniqueFilePathCounter++;
 }
