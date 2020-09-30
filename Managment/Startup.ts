@@ -72,6 +72,7 @@ export const startup = (
 	});
 };
 
+// deno-lint-ignore no-explicit-any
 function arrayContains(needle: string, arrhaystack: string | any[]) {
 	return arrhaystack.indexOf(needle) > -1;
 }

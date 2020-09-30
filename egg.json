@@ -1,21 +1,24 @@
 {
-	"name": "discordeno-helper",
-	"description": "Discordeno framework for faster development",
-	"version": "1.0.2",
-	"files": [
-		"./Utils/**/*",
-		"./Types/**/*",
-		"./Storage/**/*",
-		"./Managment/**/*",
-		"./deps.ts",
-		"./mod.ts",
-		"./README.md",
-		"./db/**/*",
-		"./tsconfig.json"
-	],
-	"ignore": [".git"],
-	"entry": "/mod.ts",
-	"checkAll": true,
-	"repository": "https://github.com/Suyashtnt/Discordeno-Helper",
-	"unlisted": false
+  "name": "discordeno-helper",
+  "description": "Discordeno framework for faster development",
+  "version": "1.1.1",
+  "files": [
+    "./Utils/**/*",
+    "./Types/**/*",
+    "./Storage/**/*",
+    "./Managment/**/*",
+    "./deps.ts",
+    "./mod.ts",
+    "./README.md",
+    "./db/**/*",
+    "./tsconfig.json",
+    "/mod.ts"
+  ],
+  "ignore": [
+    ".git"
+  ],
+  "entry": "/mod.ts",
+  "checkAll": true,
+  "repository": "https://github.com/Suyashtnt/Discordeno-Helper",
+  "unlisted": false
 }

@@ -18,22 +18,43 @@ export const createHelpCommand = (
 		command: commandPrefix,
 		desc: 'Help command',
 		aliases: aliases ? aliases : undefined,
-		runs: (msg) => {
+		runs: (msg, args) => {
 			const helpBody = new MessageEmbed();
 
 			helpBody.setTitle('All commands');
 
-			commands.map((val) => {
-				if (val.args) {
-					const args = val.args.join(' ');
-					helpBody.addField(`\`${prefix}${val.command} ${args} \``, val.desc);
-				} else {
-					helpBody.addField(`\`${prefix}${val.command}\``, val.desc);
+			if (args && args[0]) {
+				if (arrayContains(args[0], commands)) {
+					commands.map((val) => {
+						sendMessage(msg.channelID, {
+							embed: new MessageEmbed()
+								.setTitle(val.command + ' ' + val.args?.join(' '))
+								.setDescription(val.desc)
+								.addField(
+									'aliases',
+									val.aliases ? val.aliases?.join(' ') : 'none'
+								),
+						});
+					});
 				}
-			});
-			sendMessage(msg.channelID, {
-				embed: helpBody,
-			});
+			} else {
+				commands.map((val) => {
+					if (val.args) {
+						const args = val.args.join(' ');
+						helpBody.addField(`\`${prefix}${val.command} ${args} \``, val.desc);
+					} else {
+						helpBody.addField(`\`${prefix}${val.command}\``, val.desc);
+					}
+				});
+				sendMessage(msg.channelID, {
+					embed: helpBody,
+				});
+			}
 		},
 	});
 };
+
+// deno-lint-ignore no-explicit-any
+function arrayContains(needle: string, arrhaystack: string | any[]) {
+	return arrhaystack.indexOf(needle) > -1;
+}

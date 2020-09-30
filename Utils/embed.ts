@@ -91,6 +91,7 @@ class MessageEmbed {
 		this.description = text;
 		return this;
 	}
+	// deno-lint-ignore no-explicit-any
 	setColor(color: any) {
 		if (typeof color === 'string') {
 			if (color === 'RANDOM') {
