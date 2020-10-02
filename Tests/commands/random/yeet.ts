@@ -12,4 +12,5 @@ export default createCommand({
 		else sendMessage(msg.channelID, 'please enter a person to yeet');
 	},
 	inhibitors: [log],
+	cooldown: 7000,
 });

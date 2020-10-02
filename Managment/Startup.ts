@@ -3,15 +3,16 @@ import { commands } from '../Storage/commands.ts';
 import { command } from '../Types/command.ts';
 import { Logger } from 'https://deno.land/x/optic/mod.ts';
 import { cache } from 'https://x.nest.land/Discordeno@9.0.1/src/utils/cache.ts';
-import { getPrefix, setPrefix } from '../mod.ts';
+import { getPrefix, humanizeDelta, setPrefix } from '../mod.ts';
 import type { Message } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts';
 import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts';
 import { Intents, StartBot } from '../deps.ts';
-import { inhibitor } from '../Types/inhibitor.ts';
+import type { inhibitor } from '../Types/inhibitor.ts';
 import { monitors } from '../Storage/monitors.ts';
 const logger = new Logger();
 
 export let prefix: string;
+const used = new Map();
 /**
  * Starts up your bot
  * @param token Your Bot Token
@@ -43,27 +44,28 @@ export const startup = (
 					monitor.runs(msg);
 				});
 				if (msg.content.startsWith(prefix)) {
-					commands.map(async (cmd) => {
-						if (
-							cmd.command == CommandName &&
-							(cmd.inhibitors
-								? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
-								: true)
-						) {
-							logger.info(
-								`running ${cmd.command} in ${
-									cache.guilds.get(msg.guildID)?.name
-								}(channel is ${cache.channels.get(msg.channelID)?.name}) for ${
-									msg.author.username
-								}`
+					for (var i = 0; 1 < commands.length; i++) {
+						const cmd = commands[i];
+						const cooldown = used.get(msg.author.id);
+						if (cooldown) {
+							console.log('cooldown');
+
+							const remaining = humanizeDelta(cooldown - Date.now());
+							sendMessage(
+								msg.channelID,
+								`You need to wait ${remaining} before using this command again!`
 							);
-							cmd.runs(msg, Args);
+							break;
 						} else if (
-							cmd.aliases != undefined &&
-							arrayContains(CommandName, cmd.aliases) &&
-							(cmd.inhibitors
-								? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
-								: true)
+							(cmd.command == CommandName &&
+								(cmd.inhibitors
+									? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
+									: true)) ||
+							(cmd.aliases != undefined &&
+								arrayContains(CommandName, cmd.aliases) &&
+								(cmd.inhibitors
+									? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
+									: true))
 						) {
 							logger.info(
 								`running ${cmd.command} in ${
@@ -73,8 +75,19 @@ export const startup = (
 								}`
 							);
 							cmd.runs(msg, Args);
+							used.set(
+								msg.author.id,
+								Date.now() + (cmd.cooldown ? cmd.cooldown : 0)
+							);
+							setTimeout(
+								() => {
+									used.delete(msg.author.id);
+								},
+								cmd.cooldown ? cmd.cooldown : 0
+							);
+							break;
 						}
-					});
+					}
 				} else if (msg.mentions[0] === botID) {
 					sendMessage(msg.channelID, `the bot prefix is \`${prefix}\``);
 				}

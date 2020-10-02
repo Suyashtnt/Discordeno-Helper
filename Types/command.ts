@@ -12,4 +12,5 @@ export interface command {
 	inhibitors?: inhibitor[];
 	desc: string;
 	runs: (Msg: Message, Args?: string[]) => any;
+	cooldown?: number;
 }
