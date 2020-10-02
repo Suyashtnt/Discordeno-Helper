@@ -11,12 +11,19 @@ Discordeno is a small framework to help speed up the development of your discord
 - Help command generator
 - Ping for prefix
 - Prefix handler
+- Cooldown
+- Inhibtors(checks before runnning commands)
+- Monitors(run per message)
+- Time helper
+- Load from directory
 - More to come
 
 ### TODO
 
 - Permission manager
-- More automation(e.g specify paths to files and load all of them)
+- Owner only
+- prompts
+- events
 - Docs(Basics implemented)
 - Custom prefixing per command
 
