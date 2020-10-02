@@ -56,10 +56,11 @@ export const createHelpCommand = (
 							const args = val.args.join(' ');
 							helpBody.addField(
 								`\`${prefix}${val.command} ${args} \``,
-								val.desc
+								val.desc,
+								true
 							);
 						} else {
-							helpBody.addField(`\`${prefix}${val.command}\``, val.desc);
+							helpBody.addField(`\`${prefix}${val.command}\``, val.desc, true);
 						}
 					});
 					sendMessage(msg.channelID, {

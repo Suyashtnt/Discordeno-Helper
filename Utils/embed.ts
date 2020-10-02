@@ -22,11 +22,11 @@ class MessageEmbed {
 	fields: EmbedField[] = [];
 
 	setImage(url: string) {
-		this.image = { url: url };
+		this.image = { url };
 		return this;
 	}
 	setThumbnail(url: string) {
-		this.thumbnail = { url: url };
+		this.thumbnail = { url };
 		return this;
 	}
 	setAuthor(name: string, url: string) {
@@ -36,7 +36,7 @@ class MessageEmbed {
 			);
 		}
 
-		this.author = { name: name, icon_url: url };
+		this.author = { name, icon_url: url };
 		return this;
 	}
 	setFooter(text: string, url: string) {
@@ -46,7 +46,7 @@ class MessageEmbed {
 			);
 		}
 
-		this.footer = { text: text, icon_url: url };
+		this.footer = { text, icon_url: url };
 		return this;
 	}
 	addField(name: string, value: string, inline?: boolean) {
@@ -64,7 +64,7 @@ class MessageEmbed {
 			);
 		}
 
-		this.fields.push({ name: name, value: value, inline: inline || false });
+		this.fields.push({ name, value, inline: inline || false });
 		return this;
 	}
 	clearFields() {
