@@ -4,7 +4,7 @@
 
 Discordeno is a small framework to help speed up the development of your discord bots by making alot of things automatic.
 
-### whats included
+## whats included
 
 - A command handler
 - Embed generator
@@ -18,7 +18,7 @@ Discordeno is a small framework to help speed up the development of your discord
 - Load from directory
 - More to come
 
-### TODO
+## TODO
 
 - Permission manager
 - Owner only
@@ -27,6 +27,10 @@ Discordeno is a small framework to help speed up the development of your discord
 - Docs(Basics implemented)
 - Custom prefixing per command
 
-### Examples
+## Examples
 
-Basic commands can be found in the `Tests` directory
+Basic commands can be found in the `Tests` directory. There is also a [template](https://github.com/suyashtnt/discordeno-helper-template)
+
+## import URL
+
+<https://x.nest.land/discordeno-helper@2.3.0/mod.ts>
