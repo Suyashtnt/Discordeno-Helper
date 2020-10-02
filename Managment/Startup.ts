@@ -1,9 +1,14 @@
-import * as deps from '../deps.ts';
+// deno-lint-ignore-file
 import { commands } from '../Storage/commands.ts';
+import { command } from '../Types/command.ts';
 import { Logger } from 'https://deno.land/x/optic/mod.ts';
 import { cache } from 'https://x.nest.land/Discordeno@9.0.1/src/utils/cache.ts';
-import { db } from '../mod.ts';
+import { getPrefix, setPrefix } from '../mod.ts';
+import type { Message } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts';
 import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts';
+import { Intents, StartBot } from '../deps.ts';
+import { inhibitor } from '../Types/inhibitor.ts';
+import { monitors } from '../Storage/monitors.ts';
 const logger = new Logger();
 
 export let prefix: string;
@@ -20,13 +25,13 @@ export const startup = (
 	botID: string,
 	useMongo: boolean
 ) => {
-	deps.StartBot({
+	StartBot({
 		token,
-		intents: [deps.Intents.GUILD_MESSAGES, deps.Intents.GUILDS],
+		intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
 		eventHandlers: {
 			ready: () => console.log('bot started!'),
 			messageCreate: async (msg) => {
-				const dbGet = await db.getPrefix(msg.guildID);
+				const dbGet = await getPrefix(msg.guildID);
 				prefix = useMongo ? (dbGet ? dbGet : pf) : pf;
 
 				const splitableMsg = msg.content.replace(prefix, '');
@@ -34,9 +39,17 @@ export const startup = (
 				const Args = splitableMsg.split(' ');
 				Args.shift();
 
+				monitors.map(async (monitor) => {
+					monitor.runs(msg);
+				});
 				if (msg.content.startsWith(prefix)) {
-					commands.map((cmd) => {
-						if (cmd.command == CommandName) {
+					commands.map(async (cmd) => {
+						if (
+							cmd.command == CommandName &&
+							(cmd.inhibitors
+								? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
+								: true)
+						) {
 							logger.info(
 								`running ${cmd.command} in ${
 									cache.guilds.get(msg.guildID)?.name
@@ -47,7 +60,10 @@ export const startup = (
 							cmd.runs(msg, Args);
 						} else if (
 							cmd.aliases != undefined &&
-							arrayContains(CommandName, cmd.aliases)
+							arrayContains(CommandName, cmd.aliases) &&
+							(cmd.inhibitors
+								? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
+								: true)
 						) {
 							logger.info(
 								`running ${cmd.command} in ${
@@ -65,7 +81,7 @@ export const startup = (
 			},
 			guildCreate: (guild) => {
 				if (useMongo) {
-					db.setPrefix(pf, guild.id);
+					setPrefix(pf, guild.id);
 				}
 			},
 		},
@@ -75,4 +91,25 @@ export const startup = (
 // deno-lint-ignore no-explicit-any
 function arrayContains(needle: string, arrhaystack: string | any[]) {
 	return arrhaystack.indexOf(needle) > -1;
+}
+
+// deno-lint-ignore no-explicit-any
+async function testInhibitors(
+	array: inhibitor[],
+	args: [cmd: command, msg: Message, args: string[]]
+) {
+	let AllWorking = false;
+
+	await Promise.all(
+		array.map(async (element) => {
+			console.log(element.runs(...args));
+
+			//@ts-ignore
+			if (element.runs(...args) === true) {
+				AllWorking = true;
+			}
+		})
+	);
+
+	return AllWorking;
 }

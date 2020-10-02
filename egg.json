@@ -1,7 +1,7 @@
 {
 	"name": "discordeno-helper",
 	"description": "Discordeno framework for faster development",
-	"version": "1.1.1",
+	"version": "1.2.1",
 	"files": [
 		"./Utils/**/*",
 		"./Types/**/*",
@@ -11,7 +11,8 @@
 		"./mod.ts",
 		"./README.md",
 		"./db/**/*",
-		"./tsconfig.json"
+		"./tsconfig.json",
+		"/mod.ts"
 	],
 	"ignore": [".git"],
 	"entry": "/mod.ts",
