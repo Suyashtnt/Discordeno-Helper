@@ -11,18 +11,18 @@ let prefixes: Collection<PrefixSchema>;
  * Connects to the database. Run this BEFORE your bot starts up
  * @param url Your mongoDB url
  */
-export const connect = (url: string) => {
+export function connect(url: string) {
 	client.connectWithUri(url);
 	db = client.database('prefixes');
 	prefixes = db.collection<PrefixSchema>('prefixes');
-};
+}
 
 /**
  * Sets the prefix, used by the Prefix command generator
  * @param prefix The new prefix
  * @param guildID The Guilds ID
  */
-export const setPrefix = async (prefix: string, guildID: string) => {
+export async function setPrefix(prefix: string, guildID: string) {
 	return await prefixes.updateOne(
 		{ guildID },
 		{
@@ -33,16 +33,16 @@ export const setPrefix = async (prefix: string, guildID: string) => {
 			upsert: true,
 		}
 	);
-};
+}
 
 /**
  * Gets the prefix =for a certain guild
  * @param guildID The guilds ID
  */
-export const getPrefix = async (guildID: string) => {
+export async function getPrefix(guildID: string) {
 	return (
 		await prefixes.findOne({
 			guildID,
 		})
 	)?.prefix;
-};
+}

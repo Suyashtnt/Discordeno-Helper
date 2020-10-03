@@ -10,6 +10,15 @@ import { Intents, StartBot } from '../deps.ts';
 import type { inhibitor } from '../Types/inhibitor.ts';
 import { monitors } from '../Storage/monitors.ts';
 import { EventHandlers } from '../Types/eventHandlers.ts';
+import {
+	botHasPermission,
+	memberHasPermission,
+} from 'https://x.nest.land/Discordeno@9.0.1/src/utils/permissions.ts';
+import {
+	Permission,
+	Permissions,
+} from 'https://x.nest.land/Discordeno@9.0.1/src/types/permission.ts';
+import { Guild } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/guild.ts';
 const logger = new Logger();
 
 export let prefix: string;
@@ -21,13 +30,13 @@ const used = new Map();
  * @param botID your bots id
  * @param useMongo If you are using the MongoDB prefix manager
  */
-export const startup = (
+export function startup(
 	token: string,
 	pf: string,
 	botID: string,
 	useMongo: boolean,
 	eventHandlers?: EventHandlers
-) => {
+) {
 	StartBot({
 		token,
 		intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
@@ -46,9 +55,12 @@ export const startup = (
 					monitor.runs(msg);
 				});
 				if (msg.content.startsWith(prefix)) {
-					for (var i = 0; 1 < commands.length; i++) {
+					for (var i = 0; i < commands.length; i++) {
 						const cmd = commands[i];
+
 						const cooldown = used.get(msg.author.id);
+						const guild = cache.guilds.get(msg.guildID);
+
 						if (cooldown) {
 							console.log('cooldown');
 
@@ -69,25 +81,27 @@ export const startup = (
 									? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
 									: true))
 						) {
-							logger.info(
-								`running ${cmd.command} in ${
-									cache.guilds.get(msg.guildID)?.name
-								}(channel is ${cache.channels.get(msg.channelID)?.name}) for ${
-									msg.author.username
-								}`
-							);
-							cmd.runs(msg, Args);
-							used.set(
-								msg.author.id,
-								Date.now() + (cmd.cooldown ? cmd.cooldown : 0)
-							);
-							setTimeout(
-								() => {
-									used.delete(msg.author.id);
-								},
-								cmd.cooldown ? cmd.cooldown : 0
-							);
-							break;
+							if (guild && (await checkForPerms(cmd, botID, msg, guild))) {
+								logger.info(
+									`running ${cmd.command} in ${
+										cache.guilds.get(msg.guildID)?.name
+									}(channel is ${
+										cache.channels.get(msg.channelID)?.name
+									}) for ${msg.author.username}`
+								);
+								cmd.runs(msg, Args);
+								used.set(
+									msg.author.id,
+									Date.now() + (cmd.cooldown ? cmd.cooldown : 0)
+								);
+								setTimeout(
+									() => {
+										used.delete(msg.author.id);
+									},
+									cmd.cooldown ? cmd.cooldown : 0
+								);
+								break;
+							}
 						}
 					}
 				} else if (msg.mentions[0] === botID) {
@@ -102,7 +116,7 @@ export const startup = (
 			...eventHandlers,
 		},
 	});
-};
+}
 
 // deno-lint-ignore no-explicit-any
 function arrayContains(needle: string, arrhaystack: string | any[]) {
@@ -128,4 +142,79 @@ async function testInhibitors(
 	);
 
 	return AllWorking;
+}
+
+function missingCommandPermission(
+	message: Message,
+	missingPermissions: Permission[],
+	type:
+		| 'framework/core:USER_SERVER_PERM'
+		| 'framework/core:USER_CHANNEL_PERM'
+		| 'framework/core:BOT_SERVER_PERM'
+		| 'framework/core:BOT_CHANNEL_PERM'
+) {
+	const perms = missingPermissions.join(', ');
+	const response =
+		type === 'framework/core:BOT_CHANNEL_PERM'
+			? `I am missing the following permissions in this channel: **${perms}**`
+			: type === 'framework/core:BOT_SERVER_PERM'
+			? `I am missing the following permissions in this server from my roles: **${perms}**`
+			: type === 'framework/core:USER_CHANNEL_PERM'
+			? `You are missing the following permissions in this channel: **${perms}**`
+			: `You are missing the following permissions in this server from your roles: **${perms}**`;
+
+	if (!missingPermissions.includes('SEND_MESSAGES')) {
+		sendMessage(message.channelID, response);
+	}
+}
+
+async function checkForPerms(
+	cmd: command,
+	botID: string,
+	msg: Message,
+	guild?: Guild
+) {
+	if (!cmd.botPerms?.length && !cmd.userPerms?.length) {
+		return true;
+	} else if (!guild) {
+		return true;
+	}
+	if (cmd.userPerms?.length) {
+		const missingPerms = cmd.userPerms.filter((perm) => {
+			return !memberHasPermission(
+				msg.author.id,
+				guild,
+				msg.member?.roles || [],
+				[perm]
+			);
+		});
+
+		if (missingPerms.length) {
+			missingCommandPermission(
+				msg,
+				missingPerms,
+				'framework/core:USER_SERVER_PERM'
+			);
+			return false;
+		}
+	}
+	if (cmd.botPerms?.length) {
+		if (await botHasPermission(msg.guildID, [Permissions['ADMINISTRATOR']])) {
+			return true;
+		} else {
+			const missingPerms = cmd.botPerms.filter(async (perm) => {
+				return await botHasPermission(msg.guildID, [Permissions[perm]]);
+			});
+
+			if (missingPerms.length) {
+				missingCommandPermission(
+					msg,
+					missingPerms,
+					'framework/core:BOT_SERVER_PERM'
+				);
+				return false;
+			}
+		}
+	}
+	return true;
 }

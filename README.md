@@ -16,6 +16,7 @@ Discordeno is a small framework to help speed up the development of your discord
 - Monitors(run per message)
 - Time helper
 - Load from directory
+- Custom events
 - More to come
 
 ## TODO
@@ -23,7 +24,6 @@ Discordeno is a small framework to help speed up the development of your discord
 - Permission manager
 - Owner only
 - prompts
-- events
 - Docs(Basics implemented)
 - Custom prefixing per command
 

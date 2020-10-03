@@ -9,14 +9,14 @@ import type { Message } from 'https://x.nest.land/Discordeno@9.0.1/src/structure
  * @param aliases The command aliases
  * @param returnMsg A custom return message
  */
-export const createPrefixCommand = (
+export function createPrefixCommand(
 	commandPrefix: string,
 	aliases?: string[],
 	returnMsg?:
 		| ((msg: Message) => string | MessageContent)
 		| string
 		| MessageContent
-) => {
+) {
 	createCommand({
 		command: commandPrefix,
 		desc: 'Set The prefix',
@@ -38,5 +38,6 @@ export const createPrefixCommand = (
 				sendMessage(msg.channelID, 'Please enter the new prefix!');
 			}
 		},
+		userPerms: ['ADMINISTRATOR'],
 	});
-};
+}

@@ -10,10 +10,7 @@ import { prefix } from '../Managment/Startup.ts';
  * @param commandPrefix The prefix for the help command
  * @param aliases Aliases for the help command
  */
-export const createHelpCommand = (
-	commandPrefix: string,
-	aliases?: string[]
-) => {
+export function createHelpCommand(commandPrefix: string, aliases?: string[]) {
 	createCommand({
 		command: commandPrefix,
 		desc: 'Help command',
@@ -70,7 +67,7 @@ export const createHelpCommand = (
 			}
 		},
 	});
-};
+}
 
 // deno-lint-ignore no-explicit-any
 function arrayContains(needle: string, arrhaystack: string | any[]) {
