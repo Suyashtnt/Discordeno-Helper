@@ -9,6 +9,7 @@ import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/c
 import { Intents, StartBot } from '../deps.ts';
 import type { inhibitor } from '../Types/inhibitor.ts';
 import { monitors } from '../Storage/monitors.ts';
+import { EventHandlers } from '../Types/eventHandlers.ts';
 const logger = new Logger();
 
 export let prefix: string;
@@ -24,7 +25,8 @@ export const startup = (
 	token: string,
 	pf: string,
 	botID: string,
-	useMongo: boolean
+	useMongo: boolean,
+	eventHandlers?: EventHandlers
 ) => {
 	StartBot({
 		token,
@@ -97,6 +99,7 @@ export const startup = (
 					setPrefix(pf, guild.id);
 				}
 			},
+			...eventHandlers,
 		},
 	});
 };
