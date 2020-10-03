@@ -52,12 +52,20 @@ export function createHelpCommand(commandPrefix: string, aliases?: string[]) {
 						if (val.args) {
 							const args = val.args.join(' ');
 							helpBody.addField(
-								`\`${prefix}${val.command} ${args} \``,
+								`\`${val.customPrefix ? val.customPrefix : prefix}${
+									val.command
+								} ${args} \``,
 								val.desc,
 								true
 							);
 						} else {
-							helpBody.addField(`\`${prefix}${val.command}\``, val.desc, true);
+							helpBody.addField(
+								`\`${val.customPrefix ? val.customPrefix : prefix}${
+									val.command
+								}\``,
+								val.desc,
+								true
+							);
 						}
 					});
 					sendMessage(msg.channelID, {

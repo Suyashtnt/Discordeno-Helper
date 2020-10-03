@@ -19,4 +19,5 @@ export interface command {
 	cooldown?: number;
 	botPerms?: Permission[];
 	userPerms?: Permission[];
+	customPrefix?: string;
 }

@@ -17,15 +17,15 @@ Discordeno is a small framework to help speed up the development of your discord
 - Time helper
 - Load from directory
 - Custom events
+- Permission manager
 - More to come
 
 ## TODO
 
-- Permission manager
 - Owner only
 - prompts
-- Docs(Basics implemented)
 - Custom prefixing per command
+- Docs(Basics implemented)
 
 ## Examples
 

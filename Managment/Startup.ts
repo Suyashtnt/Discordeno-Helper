@@ -46,21 +46,29 @@ export function startup(
 				const dbGet = await getPrefix(msg.guildID);
 				prefix = useMongo ? (dbGet ? dbGet : pf) : pf;
 
-				const splitableMsg = msg.content.replace(prefix, '');
-				const CommandName = splitableMsg.split(' ')[0];
-				const Args = splitableMsg.split(' ');
-				Args.shift();
-
 				monitors.map(async (monitor) => {
 					monitor.runs(msg);
 				});
-				if (msg.content.startsWith(prefix)) {
-					for (var i = 0; i < commands.length; i++) {
-						const cmd = commands[i];
 
-						const cooldown = used.get(msg.author.id);
-						const guild = cache.guilds.get(msg.guildID);
+				for (var i = 0; i < commands.length; i++) {
+					const cmd = commands[i];
 
+					const CommandName = msg.content
+						.replace(cmd.customPrefix ? cmd.customPrefix : prefix, '')
+						.split(' ')[0];
+					const Args = msg.content
+						.replace(cmd.customPrefix ? cmd.customPrefix : prefix, '')
+						.split(' ');
+					Args.shift();
+
+					const cooldown = used.get(msg.author.id);
+					const guild = cache.guilds.get(msg.guildID);
+					if (cmd.customPrefix) console.log(cmd.customPrefix);
+
+					if (
+						msg.content.startsWith(prefix) ||
+						msg.content.startsWith(cmd.customPrefix ? cmd.customPrefix : prefix)
+					) {
 						if (cooldown) {
 							console.log('cooldown');
 
@@ -103,9 +111,10 @@ export function startup(
 								break;
 							}
 						}
+					} else if (msg.mentions[0] === botID) {
+						sendMessage(msg.channelID, `the bot prefix is \`${prefix}\``);
+						break;
 					}
-				} else if (msg.mentions[0] === botID) {
-					sendMessage(msg.channelID, `the bot prefix is \`${prefix}\``);
 				}
 			},
 			guildCreate: (guild) => {

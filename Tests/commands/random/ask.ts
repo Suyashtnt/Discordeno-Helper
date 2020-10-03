@@ -11,4 +11,5 @@ export default createCommand({
 			return sendMessage(msg.channelID, 'no');
 		}
 	},
+	customPrefix: 'something.',
 });
