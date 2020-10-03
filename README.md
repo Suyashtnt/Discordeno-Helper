@@ -18,13 +18,12 @@ Discordeno is a small framework to help speed up the development of your discord
 - Load from directory
 - Custom events
 - Permission manager
+- Custom prefixing per command
 - More to come
 
 ## TODO
 
-- Owner only
 - prompts
-- Custom prefixing per command
 - Docs(Basics implemented)
 
 ## Examples
