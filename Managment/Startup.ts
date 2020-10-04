@@ -39,7 +39,7 @@ export function startup(
 ) {
 	StartBot({
 		token,
-		intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
+		intents: [Intents.GUILD_MESSAGES, Intents.GUILDS, Intents.DIRECT_MESSAGES],
 		eventHandlers: {
 			ready: () => console.log('bot started!'),
 			messageCreate: async (msg) => {
@@ -62,16 +62,13 @@ export function startup(
 					Args.shift();
 
 					const cooldown = used.get(msg.author.id);
-					const guild = cache.guilds.get(msg.guildID);
-					if (cmd.customPrefix) console.log(cmd.customPrefix);
+					const guild =
+						msg.guildID != '' ? cache.guilds.get(msg.guildID) : undefined;
 
 					if (
-						msg.content.startsWith(prefix) ||
 						msg.content.startsWith(cmd.customPrefix ? cmd.customPrefix : prefix)
 					) {
 						if (cooldown) {
-							console.log('cooldown');
-
 							const remaining = humanizeDelta(cooldown - Date.now());
 							sendMessage(
 								msg.channelID,
@@ -79,17 +76,14 @@ export function startup(
 							);
 							break;
 						} else if (
-							(cmd.command == CommandName &&
-								(cmd.inhibitors
-									? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
-									: true)) ||
-							(cmd.aliases != undefined &&
-								arrayContains(CommandName, cmd.aliases) &&
-								(cmd.inhibitors
-									? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
-									: true))
+							(cmd.command == CommandName ||
+								(cmd.aliases != undefined &&
+									arrayContains(CommandName, cmd.aliases))) &&
+							(cmd.inhibitors
+								? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
+								: true)
 						) {
-							if (guild && (await checkForPerms(cmd, botID, msg, guild))) {
+							if (guild ? await checkForPerms(cmd, botID, msg, guild) : true) {
 								logger.info(
 									`running ${cmd.command} in ${
 										cache.guilds.get(msg.guildID)?.name
@@ -137,20 +131,19 @@ async function testInhibitors(
 	array: inhibitor[],
 	args: [cmd: command, msg: Message, args: string[]]
 ) {
-	let AllWorking = false;
+	let AllWorking = true;
+	console.log(array);
 
 	await Promise.all(
 		array.map(async (element) => {
-			console.log(element.runs(...args));
-
 			//@ts-ignore
-			if (element.runs(...args) === true) {
-				AllWorking = true;
+			if (element.runs(...args) === false) {
+				AllWorking = false;
 			}
 		})
 	);
 
-	return AllWorking;
+	return logger.trace(AllWorking);
 }
 
 function missingCommandPermission(

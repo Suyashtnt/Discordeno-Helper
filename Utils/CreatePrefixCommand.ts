@@ -3,6 +3,7 @@ import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/c
 import * as db from '../db/db.ts';
 import type { MessageContent } from 'https://x.nest.land/Discordeno@9.0.1/src/types/channel.ts';
 import type { Message } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts';
+import guildOnly from '../inhibitors/guildOnly.ts';
 /**
  * Creates a Prefix command for you
  * @param commandPrefix The prefix for the command
@@ -39,5 +40,6 @@ export function createPrefixCommand(
 			}
 		},
 		userPerms: ['ADMINISTRATOR'],
+		inhibitors: [guildOnly],
 	});
 }

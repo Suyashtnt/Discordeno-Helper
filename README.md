@@ -12,7 +12,7 @@ Discordeno is a small framework to help speed up the development of your discord
 - Ping for prefix
 - Prefix handler
 - Cooldown
-- Inhibtors(checks before runnning commands)
+- Inhibtors(checks before runnning commands)(Basic ones included)
 - Monitors(run per message)
 - Time helper
 - Load from directory
