@@ -143,7 +143,7 @@ async function testInhibitors(
 		})
 	);
 
-	return logger.trace(AllWorking);
+	return AllWorking;
 }
 
 function missingCommandPermission(
