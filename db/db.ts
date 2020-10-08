@@ -3,7 +3,7 @@ import {
 	MongoClient,
 } from 'https://deno.land/x/mongo@v0.12.1/mod.ts';
 import type { PrefixSchema } from './schemas/prefix.ts';
-const client = new MongoClient();
+export const client = new MongoClient();
 let db;
 let prefixes: Collection<PrefixSchema>;
 
@@ -36,7 +36,7 @@ export async function setPrefix(prefix: string, guildID: string) {
 }
 
 /**
- * Gets the prefix =for a certain guild
+ * Gets the prefix for a certain guild
  * @param guildID The guilds ID
  */
 export async function getPrefix(guildID: string) {
