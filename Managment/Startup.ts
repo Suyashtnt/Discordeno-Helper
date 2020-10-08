@@ -83,7 +83,7 @@ export function startup(
 								? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
 								: true)
 						) {
-							if (guild ? await checkForPerms(cmd, botID, msg, guild) : true) {
+							if (guild ? await checkForPerms(cmd, msg, guild) : true) {
 								logger.info(
 									`running ${cmd.command} in ${
 										cache.guilds.get(msg.guildID)?.name
@@ -170,12 +170,7 @@ function missingCommandPermission(
 	}
 }
 
-async function checkForPerms(
-	cmd: command,
-	botID: string,
-	msg: Message,
-	guild?: Guild
-) {
+async function checkForPerms(cmd: command, msg: Message, guild?: Guild) {
 	if (!cmd.botPerms?.length && !cmd.userPerms?.length) {
 		return true;
 	} else if (!guild) {
