@@ -3,20 +3,21 @@ import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/c
 import * as db from '../db/db.ts';
 import type { MessageContent } from 'https://x.nest.land/Discordeno@9.0.1/src/types/channel.ts';
 import type { Message } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts';
+import guildOnly from '../inhibitors/guildOnly.ts';
 /**
  * Creates a Prefix command for you
  * @param commandPrefix The prefix for the command
  * @param aliases The command aliases
  * @param returnMsg A custom return message
  */
-export const createPrefixCommand = (
+export function createPrefixCommand(
 	commandPrefix: string,
 	aliases?: string[],
 	returnMsg?:
 		| ((msg: Message) => string | MessageContent)
 		| string
 		| MessageContent
-) => {
+) {
 	createCommand({
 		command: commandPrefix,
 		desc: 'Set The prefix',
@@ -38,5 +39,7 @@ export const createPrefixCommand = (
 				sendMessage(msg.channelID, 'Please enter the new prefix!');
 			}
 		},
+		userPerms: ['ADMINISTRATOR'],
+		inhibitors: [guildOnly],
 	});
-};
+}

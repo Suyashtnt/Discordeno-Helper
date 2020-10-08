@@ -10,10 +10,7 @@ import { prefix } from '../Managment/Startup.ts';
  * @param commandPrefix The prefix for the help command
  * @param aliases Aliases for the help command
  */
-export const createHelpCommand = (
-	commandPrefix: string,
-	aliases?: string[]
-) => {
+export function createHelpCommand(commandPrefix: string, aliases?: string[]) {
 	createCommand({
 		command: commandPrefix,
 		desc: 'Help command',
@@ -55,12 +52,20 @@ export const createHelpCommand = (
 						if (val.args) {
 							const args = val.args.join(' ');
 							helpBody.addField(
-								`\`${prefix}${val.command} ${args} \``,
+								`\`${val.customPrefix ? val.customPrefix : prefix}${
+									val.command
+								} ${args} \``,
 								val.desc,
 								true
 							);
 						} else {
-							helpBody.addField(`\`${prefix}${val.command}\``, val.desc, true);
+							helpBody.addField(
+								`\`${val.customPrefix ? val.customPrefix : prefix}${
+									val.command
+								}\``,
+								val.desc,
+								true
+							);
 						}
 					});
 					sendMessage(msg.channelID, {
@@ -70,7 +75,7 @@ export const createHelpCommand = (
 			}
 		},
 	});
-};
+}
 
 // deno-lint-ignore no-explicit-any
 function arrayContains(needle: string, arrhaystack: string | any[]) {

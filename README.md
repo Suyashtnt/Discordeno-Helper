@@ -12,20 +12,19 @@ Discordeno is a small framework to help speed up the development of your discord
 - Ping for prefix
 - Prefix handler
 - Cooldown
-- Inhibtors(checks before runnning commands)
+- Inhibtors(checks before runnning commands)(Basic ones included)
 - Monitors(run per message)
 - Time helper
 - Load from directory
+- Custom events
+- Permission manager
+- Custom prefixing per command
 - More to come
 
 ## TODO
 
-- Permission manager
-- Owner only
-- prompts
-- events
+- ~~prompts~~ to complex. Unless high demand not adding
 - Docs(Basics implemented)
-- Custom prefixing per command
 
 ## Examples
 

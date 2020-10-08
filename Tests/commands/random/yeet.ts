@@ -11,6 +11,8 @@ export default createCommand({
 			sendMessage(msg.channelID, `yeeted ${args[0]}`);
 		else sendMessage(msg.channelID, 'please enter a person to yeet');
 	},
-	inhibitors: [log],
+	//inhibitors: [log],
+	userPerms: ['KICK_MEMBERS'],
+	botPerms: ['KICK_MEMBERS'],
 	cooldown: 7000,
 });

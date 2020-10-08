@@ -15,7 +15,7 @@ const DURATION_MAPPING: Mapping = {
  * Turn a delta into a human readanble thing
  * @param delta the delta
  */
-export const humanizeDelta = (delta: number) => {
+export function humanizeDelta(delta: number) {
 	let d = delta;
 	// deno-lint-ignore no-explicit-any
 	let durations: any[] = [];
@@ -33,9 +33,9 @@ export const humanizeDelta = (delta: number) => {
 	});
 
 	return durations.map(([name, count]) => `${count} ${name}`).join(' ');
-};
+}
 
-export const stringToSeconds = (amount: string) => {
+export function stringToSeconds(amount: string) {
 	if (!amount) {
 		return 0;
 	}
@@ -50,4 +50,4 @@ export const stringToSeconds = (amount: string) => {
 		return parseInt(value) * DURATION_MAPPING[key];
 	}
 	return 0;
-};
+}
