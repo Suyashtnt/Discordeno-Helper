@@ -23,7 +23,7 @@ Discordeno is a small framework to help speed up the development of your discord
 
 ## TODO
 
-- prompts
+- ~~prompts~~ to complex. Unless high demand not adding
 - Docs(Basics implemented)
 
 ## Examples
