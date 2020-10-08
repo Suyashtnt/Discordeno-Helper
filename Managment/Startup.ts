@@ -6,7 +6,7 @@ import { cache } from 'https://x.nest.land/Discordeno@9.0.1/src/utils/cache.ts';
 import { getPrefix, humanizeDelta, setPrefix } from '../mod.ts';
 import type { Message } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts';
 import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts';
-import { Intents, StartBot } from '../deps.ts';
+import { Intents } from '../deps.ts';
 import type { inhibitor } from '../Types/inhibitor.ts';
 import { monitors } from '../Storage/monitors.ts';
 import { EventHandlers } from '../Types/eventHandlers.ts';
@@ -19,6 +19,7 @@ import {
 	Permissions,
 } from 'https://x.nest.land/Discordeno@9.0.1/src/types/permission.ts';
 import { Guild } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/guild.ts';
+import createClient from 'https://x.nest.land/Discordeno@9.0.1/src/module/client.ts';
 const logger = new Logger();
 
 export let prefix: string;
@@ -37,7 +38,7 @@ export function startup(
 	useMongo: boolean,
 	eventHandlers?: EventHandlers
 ) {
-	StartBot({
+	createClient({
 		token,
 		intents: [Intents.GUILD_MESSAGES, Intents.GUILDS, Intents.DIRECT_MESSAGES],
 		eventHandlers: {
@@ -214,4 +215,22 @@ async function checkForPerms(cmd: command, msg: Message, guild?: Guild) {
 		}
 	}
 	return true;
+}
+/**
+ * Starts up your bot
+ *
+ * this is just startup but has a better name
+ * @param token Your Bot Token
+ * @param prefix The Bots prefix
+ * @param botID your bots id
+ * @param useMongo If you are using the MongoDB prefix manager
+ */
+export function startBot(
+	token: string,
+	pf: string,
+	botID: string,
+	useMongo: boolean,
+	eventHandlers?: EventHandlers
+) {
+	startup(token, pf, botID, useMongo, eventHandlers);
 }
