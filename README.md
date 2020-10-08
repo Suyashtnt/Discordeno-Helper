@@ -19,6 +19,7 @@ Discordeno is a small framework to help speed up the development of your discord
 - Custom events
 - Permission manager
 - Custom prefixing per command
+- Custom events
 - More to come
 
 ## TODO
