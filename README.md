@@ -33,4 +33,4 @@ Basic commands can be found in the `Tests` directory. There is also a [template]
 
 ## import URL
 
-<https://x.nest.land/discordeno-helper@2.3.0/mod.ts>
+<https://x.nest.land/discordeno-helper@2.4.0/mod.ts>
