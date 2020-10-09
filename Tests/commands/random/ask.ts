@@ -6,9 +6,9 @@ export default createCommand({
 	desc: 'ask something',
 	runs: (msg) => {
 		if (Math.random() > 0.5) {
-			return sendMessage(msg.channelID, 'yes');
+			return msg.reply('yes');
 		} else {
-			return sendMessage(msg.channelID, 'no');
+			return msg.return('no');
 		}
 	},
 	customPrefix: 'something.',

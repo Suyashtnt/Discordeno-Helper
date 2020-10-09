@@ -25,6 +25,7 @@ import { Guild } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/guild
 import createClient from 'https://x.nest.land/Discordeno@9.0.1/src/module/client.ts';
 import { Intents } from 'https://x.nest.land/Discordeno@9.0.1/src/types/options.ts';
 import { startup as startupInterface } from '../Types/startup.ts';
+import { message } from '../Types/message.ts';
 
 export const logger = new Logger().withMinLogLevel(Level.INFO);
 export let intents = [
@@ -113,6 +114,14 @@ export async function startup({
 								: true)
 						) {
 							if (guild ? await checkForPerms(cmd, msg, guild) : true) {
+								const newMessge: message = {
+									...msg,
+									channel: cache.channels.get(msg.channelID),
+									guild,
+									reply: (mssg) =>
+										sendMessage(msg.channelID, `<@${msg.author.id}> ${mssg}`),
+									return: (mssg) => sendMessage(msg.channelID, mssg),
+								};
 								logger.info(
 									`running ${cmd.command} in ${
 										cache.guilds.get(msg.guildID)?.name
@@ -120,7 +129,7 @@ export async function startup({
 										cache.channels.get(msg.channelID)?.name
 									}) for ${msg.author.username}`
 								);
-								cmd.runs(msg, Args);
+								cmd.runs(newMessge, Args);
 								used.set(
 									msg.author.id,
 									Date.now() + (cmd.cooldown ? cmd.cooldown : 0)

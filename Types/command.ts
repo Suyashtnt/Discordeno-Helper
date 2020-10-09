@@ -2,6 +2,7 @@
 import type { Message } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts';
 import { Permission } from 'https://x.nest.land/Discordeno@9.0.1/src/types/permission.ts';
 import { inhibitor } from './inhibitor.ts';
+import { message } from './message.ts';
 
 /**
  * Type used for CreateCommand
@@ -36,7 +37,7 @@ export interface command {
 	/**
 	 * What this command runs
 	 */
-	runs: (Msg: Message, Args?: string[]) => any;
+	runs: (Msg: message, Args?: string[]) => any;
 	/**
 	 * The commands cooldown
 	 */
