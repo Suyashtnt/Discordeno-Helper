@@ -1,7 +1,7 @@
 // deno-lint-ignore-file
 import { commands } from '../Storage/commands.ts';
 import { command } from '../Types/command.ts';
-import { Logger } from 'https://deno.land/x/optic/mod.ts';
+import { Level, Logger } from 'https://deno.land/x/optic/mod.ts';
 import { cache } from 'https://x.nest.land/Discordeno@9.0.1/src/utils/cache.ts';
 import {
 	getPrefix,
@@ -26,7 +26,7 @@ import createClient from 'https://x.nest.land/Discordeno@9.0.1/src/module/client
 import { Intents } from 'https://x.nest.land/Discordeno@9.0.1/src/types/options.ts';
 import { startup as startupInterface } from '../Types/startup.ts';
 
-const logger = new Logger();
+export const logger = new Logger().withMinLogLevel(Level.INFO);
 export let intents = [
 	Intents.GUILD_MESSAGES,
 	Intents.GUILDS,
@@ -55,25 +55,37 @@ export async function startup({
 		token,
 		intents,
 		eventHandlers: {
-			ready: () => console.log('bot started!'),
+			ready: () => logger.info('bot started!'),
 			messageCreate: async (msg) => {
-				const dbGet = await getPrefix(msg.guildID);
-				pf = useMongoDB ? (dbGet ? dbGet : prefix) : prefix;
+				if (msg.author.bot) {
+					return;
+				}
+				const dbGet = logger.debug(await getPrefix(msg.guildID), {
+					type: 'get prefix from db',
+				});
+				pf = logger.debug(useMongoDB ? (dbGet ? dbGet : prefix) : prefix, {
+					type: 'the current prefix',
+				});
 
 				monitors.map(async (monitor) => {
+					logger.debug('running ' + monitor.desc);
 					monitor.runs(msg);
 				});
 
 				for (var i = 0; i < commands.length; i++) {
 					const cmd = commands[i];
 
-					const CommandName = msg.content
-						.replace(cmd.customPrefix ? cmd.customPrefix : pf, '')
-						.split(' ')[0];
-					const Args = msg.content
-						.replace(cmd.customPrefix ? cmd.customPrefix : pf, '')
-						.split(' ');
-					Args.shift();
+					const Args = logger.debug(
+						msg.content
+							.replace(cmd.customPrefix ? cmd.customPrefix : pf, '')
+							.split(' '),
+						{
+							type: 'Get args and cmdName',
+						}
+					);
+					const CommandName = logger.debug(Args.shift(), {
+						type: 'cmd name',
+					});
 
 					const cooldown = used.get(msg.author.id);
 					const guild =
@@ -92,7 +104,10 @@ export async function startup({
 						} else if (
 							(cmd.command == CommandName ||
 								(cmd.aliases != undefined &&
-									arrayContains(CommandName, cmd.aliases))) &&
+									arrayContains(
+										CommandName ? CommandName : 'this should not happen',
+										cmd.aliases
+									))) &&
 							(cmd.inhibitors
 								? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
 								: true)
@@ -146,10 +161,10 @@ async function testInhibitors(
 	args: [cmd: command, msg: Message, args: string[]]
 ) {
 	let AllWorking = true;
-	console.log(array);
 
 	await Promise.all(
 		array.map(async (element) => {
+			logger.debug('checking ' + element.desc);
 			//@ts-ignore
 			if (element.runs(...args) === false) {
 				AllWorking = false;
