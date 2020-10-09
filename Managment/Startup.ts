@@ -61,12 +61,14 @@ export async function startup({
 				if (msg.author.bot) {
 					return;
 				}
-				const dbGet = logger.debug(await getPrefix(msg.guildID), {
-					type: 'get prefix from db',
-				});
-				pf = logger.debug(useMongoDB ? (dbGet ? dbGet : prefix) : prefix, {
-					type: 'the current prefix',
-				});
+				const dbGet = logger.debug(
+					await getPrefix(msg.guildID),
+					'get prefix from db'
+				);
+				pf = logger.debug(
+					useMongoDB ? (dbGet ? dbGet : prefix) : prefix,
+					'the current prefix'
+				);
 
 				monitors.map(async (monitor) => {
 					logger.debug('running ' + monitor.desc);
@@ -80,9 +82,7 @@ export async function startup({
 						msg.content
 							.replace(cmd.customPrefix ? cmd.customPrefix : pf, '')
 							.split(' '),
-						{
-							type: 'Get args and cmdName',
-						}
+						'Get args and cmdName'
 					);
 					const CommandName = logger.debug(Args.shift(), {
 						type: 'cmd name',

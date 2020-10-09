@@ -15,4 +15,5 @@ export default createCommand({
 	userPerms: ['KICK_MEMBERS'],
 	botPerms: ['KICK_MEMBERS'],
 	cooldown: 7000,
+	category: 'random',
 });

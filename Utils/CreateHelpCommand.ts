@@ -1,8 +1,9 @@
-import { commands } from '../Storage/commands.ts';
+import { categories, commands } from '../Storage/commands.ts';
 import { createCommand } from './CreateCommand.ts';
 import { MessageEmbed } from './embed.ts';
 import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts';
-import { pf } from '../Managment/Startup.ts';
+import { logger, pf } from '../Managment/Startup.ts';
+import { command } from '../mod.ts';
 
 // inspired by my own bot https://i.imgur.com/6hfNkZl.png
 /**
@@ -10,12 +11,17 @@ import { pf } from '../Managment/Startup.ts';
  * @param commandPrefix The prefix for the help command
  * @param aliases Aliases for the help command
  */
-export function createHelpCommand(commandPrefix: string, aliases?: string[]) {
+export function createHelpCommand(
+	commandPrefix: string,
+	category: string,
+	aliases?: string[]
+) {
 	createCommand({
 		command: commandPrefix,
 		desc: 'Help command',
 		aliases: aliases ? aliases : undefined,
-		runs: (msg, args) => {
+		runs: async (msg, args) => {
+			logger.info(categories);
 			const helpBody = new MessageEmbed();
 
 			helpBody.setTitle('All commands');
@@ -23,13 +29,6 @@ export function createHelpCommand(commandPrefix: string, aliases?: string[]) {
 				if (args[0]) {
 					console.log(args[0]);
 					commands.map((val) => {
-						console.log(
-							(val.command === args[0] ||
-								(val.aliases ? val.aliases : '') === args[0]) +
-								' cmd name is' +
-								val.command
-						);
-
 						if (
 							val.command === args[0] ||
 							(val.aliases ? val.aliases : '') === args[0]
@@ -48,34 +47,37 @@ export function createHelpCommand(commandPrefix: string, aliases?: string[]) {
 						}
 					});
 				} else {
-					commands.map((val) => {
-						if (val.args) {
-							const args = val.args.join(' ');
-							helpBody.addField(
-								`\`${val.customPrefix ? val.customPrefix : pf}${
-									val.command
-								} ${args} \``,
-								val.desc,
-								true
+					const embed = new MessageEmbed();
+					await Promise.all(
+						categories.map(async (cate) => {
+							let currentCmds: command[] = [];
+							await Promise.all(
+								commands.map((cmd) => {
+									if (cmd.category === cate) {
+										currentCmds.push(cmd);
+									}
+								})
 							);
-						} else {
-							helpBody.addField(
-								`\`${val.customPrefix ? val.customPrefix : pf}${val.command}\``,
-								val.desc,
-								true
+							const fields = await Promise.all(
+								currentCmds.map((cmd) => {
+									if (!cmd.args) {
+										return `\`${cmd.command}\` - ${cmd.desc}`;
+									} else {
+										return `\`${cmd.command} ${cmd.args.join(' ')}\` - ${
+											cmd.desc
+										}`;
+									}
+								})
 							);
-						}
-					});
+							embed.addField(cate, fields.join('\n'), true);
+						})
+					);
 					sendMessage(msg.channelID, {
-						embed: helpBody,
+						embed: embed,
 					});
 				}
 			}
 		},
+		category,
 	});
-}
-
-// deno-lint-ignore no-explicit-any
-function arrayContains(needle: string, arrhaystack: string | any[]) {
-	return arrhaystack.indexOf(needle) > -1;
 }

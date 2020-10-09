@@ -56,4 +56,5 @@ export interface command {
 	 * @example if the main prefix is `e.` and this is set to `e!` and the command name is `e` then `e.e` wont work but `e!e` will
 	 */
 	customPrefix?: string;
+	category: string;
 }

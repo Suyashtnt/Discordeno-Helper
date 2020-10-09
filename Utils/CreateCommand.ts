@@ -1,4 +1,4 @@
-import { commands } from '../Storage/commands.ts';
+import { categories, commands } from '../Storage/commands.ts';
 import type { command } from '../Types/command.ts';
 
 /**
@@ -7,5 +7,13 @@ import type { command } from '../Types/command.ts';
  */
 export function createCommand(command: command) {
 	commands.push(command);
+	if (arrayContains(command.category, categories) === false) {
+		categories.push(command.category);
+	}
 	return command;
+}
+
+// deno-lint-ignore no-explicit-any
+function arrayContains(needle: string, arrhaystack: string | any[]) {
+	return arrhaystack.indexOf(needle) > -1;
 }

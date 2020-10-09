@@ -12,6 +12,7 @@ import guildOnly from '../inhibitors/guildOnly.ts';
  */
 export function createPrefixCommand(
 	commandPrefix: string,
+	category: string,
 	aliases?: string[],
 	returnMsg?:
 		| ((msg: Message) => string | MessageContent)
@@ -38,5 +39,6 @@ export function createPrefixCommand(
 		},
 		userPerms: ['ADMINISTRATOR'],
 		inhibitors: [guildOnly],
+		category,
 	});
 }

@@ -13,4 +13,5 @@ export default createCommand({
 	},
 	customPrefix: 'something.',
 	inhibitors: [dmOnly],
+	category: 'random',
 });
