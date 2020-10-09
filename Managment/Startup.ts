@@ -3,13 +3,16 @@ import { commands } from '../Storage/commands.ts';
 import { command } from '../Types/command.ts';
 import { Logger } from 'https://deno.land/x/optic/mod.ts';
 import { cache } from 'https://x.nest.land/Discordeno@9.0.1/src/utils/cache.ts';
-import { getPrefix, humanizeDelta, setPrefix } from '../mod.ts';
+import {
+	getPrefix,
+	humanizeDelta,
+	importDirectory,
+	setPrefix,
+} from '../mod.ts';
 import type { Message } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts';
 import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts';
-import { Intents } from '../deps.ts';
 import type { inhibitor } from '../Types/inhibitor.ts';
 import { monitors } from '../Storage/monitors.ts';
-import { EventHandlers } from '../Types/eventHandlers.ts';
 import {
 	botHasPermission,
 	memberHasPermission,
@@ -20,9 +23,16 @@ import {
 } from 'https://x.nest.land/Discordeno@9.0.1/src/types/permission.ts';
 import { Guild } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/guild.ts';
 import createClient from 'https://x.nest.land/Discordeno@9.0.1/src/module/client.ts';
-const logger = new Logger();
+import { Intents } from 'https://x.nest.land/Discordeno@9.0.1/src/types/options.ts';
+import { startup as startupInterface } from '../Types/startup.ts';
 
-export let prefix: string;
+const logger = new Logger();
+export let intents = [
+	Intents.GUILD_MESSAGES,
+	Intents.GUILDS,
+	Intents.DIRECT_MESSAGES,
+];
+export let pf: string;
 const used = new Map();
 /**
  * Starts up your bot
@@ -31,21 +41,24 @@ const used = new Map();
  * @param botID your bots id
  * @param useMongo If you are using the MongoDB prefix manager
  */
-export function startup(
-	token: string,
-	pf: string,
-	botID: string,
-	useMongo: boolean,
-	eventHandlers?: EventHandlers
-) {
+export async function startup({
+	botID,
+	prefix,
+	token,
+	eventHandlers,
+	imports,
+	useMongoDB,
+}: startupInterface) {
+	await importDirectory(Deno.realPathSync(imports.cmdDir));
+	await importDirectory(Deno.realPathSync(imports.monitorDir));
 	createClient({
 		token,
-		intents: [Intents.GUILD_MESSAGES, Intents.GUILDS, Intents.DIRECT_MESSAGES],
+		intents,
 		eventHandlers: {
 			ready: () => console.log('bot started!'),
 			messageCreate: async (msg) => {
 				const dbGet = await getPrefix(msg.guildID);
-				prefix = useMongo ? (dbGet ? dbGet : pf) : pf;
+				pf = useMongoDB ? (dbGet ? dbGet : prefix) : prefix;
 
 				monitors.map(async (monitor) => {
 					monitor.runs(msg);
@@ -55,10 +68,10 @@ export function startup(
 					const cmd = commands[i];
 
 					const CommandName = msg.content
-						.replace(cmd.customPrefix ? cmd.customPrefix : prefix, '')
+						.replace(cmd.customPrefix ? cmd.customPrefix : pf, '')
 						.split(' ')[0];
 					const Args = msg.content
-						.replace(cmd.customPrefix ? cmd.customPrefix : prefix, '')
+						.replace(cmd.customPrefix ? cmd.customPrefix : pf, '')
 						.split(' ');
 					Args.shift();
 
@@ -67,7 +80,7 @@ export function startup(
 						msg.guildID != '' ? cache.guilds.get(msg.guildID) : undefined;
 
 					if (
-						msg.content.startsWith(cmd.customPrefix ? cmd.customPrefix : prefix)
+						msg.content.startsWith(cmd.customPrefix ? cmd.customPrefix : pf)
 					) {
 						if (cooldown) {
 							const remaining = humanizeDelta(cooldown - Date.now());
@@ -113,7 +126,7 @@ export function startup(
 				}
 			},
 			guildCreate: (guild) => {
-				if (useMongo) {
+				if (useMongoDB) {
 					setPrefix(pf, guild.id);
 				}
 			},
@@ -225,12 +238,14 @@ async function checkForPerms(cmd: command, msg: Message, guild?: Guild) {
  * @param botID your bots id
  * @param useMongo If you are using the MongoDB prefix manager
  */
-export function startBot(
-	token: string,
-	pf: string,
-	botID: string,
-	useMongo: boolean,
-	eventHandlers?: EventHandlers
-) {
-	startup(token, pf, botID, useMongo, eventHandlers);
+export function startBot(params: startupInterface) {
+	startup(params);
+}
+/**
+ * Adds a bot intent
+ * @see
+ * @param intent The intent to add
+ */
+export function addIntent(intent: Intents) {
+	return intents.push(intent);
 }

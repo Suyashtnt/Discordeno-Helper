@@ -28,11 +28,8 @@ export function createPrefixCommand(
 				db.setPrefix(args[0], msg.guildID).then(() =>
 					sendMessage(
 						msg.channelID,
-						returnMsg
-							? typeof returnMsg === 'function'
-								? returnMsg(msg)
-								: returnMsg
-							: 'Updated successully'
+						// prettier-ignore
+						returnMsg ? typeof returnMsg === 'function' ? returnMsg(msg) : returnMsg : 'Updated successully'
 					)
 				);
 			} else {

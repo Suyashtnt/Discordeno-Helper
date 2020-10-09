@@ -8,7 +8,7 @@ const inhibitor: inhib = {
 		} else {
 			sendMessage(
 				msg.channelID,
-				`\`${cmd.command}\` is a dm only command. Run it in a dm`
+				`\`${cmd.command}\` is a DM only command. Message me to run it`
 			);
 			return false;
 		}

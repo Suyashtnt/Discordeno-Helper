@@ -2,7 +2,7 @@ import { commands } from '../Storage/commands.ts';
 import { createCommand } from './CreateCommand.ts';
 import { MessageEmbed } from './embed.ts';
 import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts';
-import { prefix } from '../Managment/Startup.ts';
+import { pf } from '../Managment/Startup.ts';
 
 // inspired by my own bot https://i.imgur.com/6hfNkZl.png
 /**
@@ -52,7 +52,7 @@ export function createHelpCommand(commandPrefix: string, aliases?: string[]) {
 						if (val.args) {
 							const args = val.args.join(' ');
 							helpBody.addField(
-								`\`${val.customPrefix ? val.customPrefix : prefix}${
+								`\`${val.customPrefix ? val.customPrefix : pf}${
 									val.command
 								} ${args} \``,
 								val.desc,
@@ -60,9 +60,7 @@ export function createHelpCommand(commandPrefix: string, aliases?: string[]) {
 							);
 						} else {
 							helpBody.addField(
-								`\`${val.customPrefix ? val.customPrefix : prefix}${
-									val.command
-								}\``,
+								`\`${val.customPrefix ? val.customPrefix : pf}${val.command}\``,
 								val.desc,
 								true
 							);

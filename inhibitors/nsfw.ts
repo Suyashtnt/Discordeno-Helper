@@ -11,7 +11,7 @@ const inhibitor: inhib = {
 		} else {
 			sendMessage(
 				msg.channelID,
-				`\`${cmd.command}\` is an NSFW command. Run it in an NSFW channel`
+				`\`${cmd.command}\` is a NSFW command. Run it in an NSFW channel`
 			);
 			return false;
 		}

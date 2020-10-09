@@ -11,7 +11,7 @@ const inhibitor: inhib = {
 		} else {
 			sendMessage(
 				msg.channelID,
-				`\`${cmd.command}\` is an server only command. Run it in an server`
+				`\`${cmd.command}\` is an server only command. Run it in a server`
 			);
 			return false;
 		}

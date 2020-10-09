@@ -8,7 +8,7 @@ let db;
 let prefixes: Collection<PrefixSchema>;
 
 /**
- * Connects to the database. Run this BEFORE your bot starts up
+ * Connects to the database. Run this BEFORE you run `startBot`
  * @param url Your mongoDB url
  */
 export function connect(url: string) {
