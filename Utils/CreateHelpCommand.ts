@@ -28,7 +28,7 @@ export function createHelpCommand(
 			if (args) {
 				if (args[0]) {
 					console.log(args[0]);
-					commands.map((val) => {
+					commands.forEach((val) => {
 						if (
 							val.command === args[0] ||
 							(val.aliases ? val.aliases : '') === args[0]
@@ -51,13 +51,13 @@ export function createHelpCommand(
 					await Promise.all(
 						categories.map(async (cate) => {
 							let currentCmds: command[] = [];
-							await Promise.all(
-								commands.map((cmd) => {
-									if (cmd.category === cate) {
-										currentCmds.push(cmd);
-									}
-								})
-							);
+
+							commands.forEach((cmd) => {
+								if (cmd.category === cate) {
+									currentCmds.push(cmd);
+								}
+							});
+
 							const fields = await Promise.all(
 								currentCmds.map((cmd) => {
 									if (!cmd.args) {

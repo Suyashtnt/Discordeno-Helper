@@ -6,7 +6,7 @@ import type { command } from '../Types/command.ts';
  * @param command The command info
  */
 export function createCommand(command: command) {
-	commands.push(command);
+	commands.set(command.command, command);
 	if (arrayContains(command.category, categories) === false) {
 		categories.push(command.category);
 	}

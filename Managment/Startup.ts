@@ -75,78 +75,105 @@ export async function startup({
 					monitor.runs(msg);
 				});
 
-				for (var i = 0; i < commands.length; i++) {
-					const cmd = commands[i];
+				let cmd: command;
 
-					const Args = logger.debug(
-						msg.content
-							.replace(cmd.customPrefix ? cmd.customPrefix : pf, '')
-							.split(' '),
-						'Get args and cmdName'
-					);
-					const CommandName = logger.debug(Args.shift(), {
-						type: 'cmd name',
-					});
-
-					const cooldown = used.get(msg.author.id);
-					const guild =
-						msg.guildID != '' ? cache.guilds.get(msg.guildID) : undefined;
-
-					if (
-						msg.content.startsWith(cmd.customPrefix ? cmd.customPrefix : pf)
-					) {
-						if (cooldown) {
-							const remaining = humanizeDelta(cooldown - Date.now());
-							sendMessage(
-								msg.channelID,
-								`You need to wait ${remaining} before using this command again!`
-							);
-							break;
-						} else if (
-							(cmd.command == CommandName ||
-								(cmd.aliases != undefined &&
-									arrayContains(
-										CommandName ? CommandName : 'this should not happen',
-										cmd.aliases
-									))) &&
-							(cmd.inhibitors
-								? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
-								: true)
+				await Promise.resolve(
+					commands.forEach((command) => {
+						if (
+							command.command ===
+								logger.debug(
+									msg.content
+										.replace(
+											command.customPrefix ? command.customPrefix : pf,
+											''
+										)
+										.split(' ')[0]
+								) ||
+							arrayContains(
+								msg.content
+									.replace(command.customPrefix ? command.customPrefix : pf, '')
+									.split(' ')[0],
+								command.aliases ? command.aliases : []
+							)
 						) {
-							if (guild ? await checkForPerms(cmd, msg, guild) : true) {
-								const newMessge: message = {
-									...msg,
-									channel: cache.channels.get(msg.channelID),
-									guild,
-									reply: (mssg) =>
-										sendMessage(msg.channelID, `<@${msg.author.id}> ${mssg}`),
-									return: (mssg) => sendMessage(msg.channelID, mssg),
-								};
-								logger.info(
-									`running ${cmd.command} in ${
-										cache.guilds.get(msg.guildID)?.name
-									}(channel is ${
-										cache.channels.get(msg.channelID)?.name
-									}) for ${msg.author.username}`
-								);
-								cmd.runs(newMessge, Args);
-								used.set(
-									msg.author.id,
-									Date.now() + (cmd.cooldown ? cmd.cooldown : 0)
-								);
-								setTimeout(
-									() => {
-										used.delete(msg.author.id);
-									},
-									cmd.cooldown ? cmd.cooldown : 0
-								);
-								break;
+							const out = commands.get(command.command);
+							if (out) {
+								cmd = out;
 							}
 						}
-					} else if (msg.mentions[0] === botID) {
-						sendMessage(msg.channelID, `the bot prefix is \`${prefix}\``);
-						break;
+					})
+				).then(async () => {
+					logger.debug(cmd);
+
+					if (cmd) {
+						const Args = logger.debug(
+							msg.content
+								.replace(cmd.customPrefix ? cmd.customPrefix : pf, '')
+								.split(' '),
+							'Get args and cmdName'
+						);
+						const CommandName = logger.debug(Args.shift(), {
+							type: 'cmd name',
+						});
+
+						const cooldown = used.get(msg.author.id);
+						const guild =
+							msg.guildID != '' ? cache.guilds.get(msg.guildID) : undefined;
+
+						if (
+							msg.content.startsWith(cmd.customPrefix ? cmd.customPrefix : pf)
+						) {
+							if (cooldown) {
+								const remaining = humanizeDelta(cooldown - Date.now());
+								sendMessage(
+									msg.channelID,
+									`You need to wait ${remaining} before using this command again!`
+								);
+							} else if (
+								(cmd.command == CommandName ||
+									(cmd.aliases != undefined &&
+										arrayContains(
+											CommandName ? CommandName : 'this should not happen',
+											cmd.aliases
+										))) &&
+								(cmd.inhibitors
+									? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
+									: true)
+							) {
+								if (guild ? await checkForPerms(cmd, msg, guild) : true) {
+									const newMessge: message = {
+										...msg,
+										channel: cache.channels.get(msg.channelID),
+										guild,
+										reply: (mssg) =>
+											sendMessage(msg.channelID, `<@${msg.author.id}> ${mssg}`),
+										return: (mssg) => sendMessage(msg.channelID, mssg),
+									};
+									logger.info(
+										`running ${cmd.command} in ${
+											cache.guilds.get(msg.guildID)?.name
+										}(channel is ${
+											cache.channels.get(msg.channelID)?.name
+										}) for ${msg.author.username}`
+									);
+									cmd.runs(newMessge, Args);
+									used.set(
+										msg.author.id,
+										Date.now() + (cmd.cooldown ? cmd.cooldown : 0)
+									);
+									setTimeout(
+										() => {
+											used.delete(msg.author.id);
+										},
+										cmd.cooldown ? cmd.cooldown : 0
+									);
+								}
+							}
+						}
 					}
+				});
+				if (msg.mentions[0] === botID) {
+					sendMessage(msg.channelID, `the bot prefix is \`${pf}\``);
 				}
 			},
 			guildCreate: (guild) => {
