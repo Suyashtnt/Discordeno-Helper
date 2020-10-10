@@ -5,7 +5,7 @@ import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/c
 import { pf } from '../Managment/Startup.ts';
 import type { command } from '../mod.ts';
 
-// inspired by my own bot https://i.imgur.com/6hfNkZl.png
+// inspired by dank memer
 /**
  * Creates a generative help command so you dont have to manually manage enteries or make one by yourself
  * @param commandPrefix The prefix for the help command
@@ -35,7 +35,7 @@ export function createHelpCommand(
 							sendMessage(msg.channelID, {
 								embed: new MessageEmbed()
 									.setTitle(
-										val.command + ' ' + (val.args ? val.args.join(' ') : '')
+										`${val.command} ${val.args ? val.args.join(' ') : ''}`
 									)
 									.setDescription(val.desc)
 									.addField(
@@ -62,9 +62,9 @@ export function createHelpCommand(
 									if (!cmd.args) {
 										return `\`${pf}${cmd.command}\` - ${cmd.desc}`;
 									} else {
-										return `\`${pf}${cmd.command} ${cmd.args.join(' ')}\` - ${
-											cmd.desc
-										}`;
+										return `\`${cmd.customPrefix ? cmd.customPrefix : pf}${
+											cmd.command
+										} ${cmd.args.join(' ')}\` - ${cmd.desc}`;
 									}
 								})
 							);
