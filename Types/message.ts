@@ -1,11 +1,26 @@
 // deno-lint-ignore-file
-import { Message } from 'https://2b4uf3aywcv5mde67pmncptxeqv2yujmbcssaxy5n7meddskiwia.arweave.net/0HlC7Biwq9YMnvvY0T53JCusUSwIpSBfHW_YQY5KRZA/src/structures/message.ts';
-import { Channel } from 'https://2b4uf3aywcv5mde67pmncptxeqv2yujmbcssaxy5n7meddskiwia.arweave.net/0HlC7Biwq9YMnvvY0T53JCusUSwIpSBfHW_YQY5KRZA/src/structures/channel.ts';
-import { Guild } from 'https://2b4uf3aywcv5mde67pmncptxeqv2yujmbcssaxy5n7meddskiwia.arweave.net/0HlC7Biwq9YMnvvY0T53JCusUSwIpSBfHW_YQY5KRZA/src/structures/guild.ts';
+import { Message } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts';
+import { Channel } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/channel.ts';
+import { Guild } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/guild.ts';
 
+/**
+ * custom interface for messages based on the original one
+ */
 export interface message extends Message {
+	/**
+	 * messages channel
+	 */
 	channel?: Channel;
+	/**
+	 * the messages guild if applicable
+	 */
 	guild?: Guild;
+	/**
+	 * Sends a message to the original channel and pings the author
+	 */
 	reply: (message: string) => any;
+	/**
+	 * Sends a message to the original channel
+	 */
 	return: (mesage: string) => any;
 }

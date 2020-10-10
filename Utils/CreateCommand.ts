@@ -1,3 +1,4 @@
+import { logger } from '../Managment/Startup.ts';
 import { categories, commands } from '../Storage/commands.ts';
 import type { command } from '../Types/command.ts';
 
@@ -5,15 +6,26 @@ import type { command } from '../Types/command.ts';
  * Adds a command
  * @param command The command info
  */
-export function createCommand(command: command) {
-	commands.set(command.command, command);
-	if (arrayContains(command.category, categories) === false) {
-		categories.push(command.category);
+export async function createCommand(command: command) {
+	let uid = logger.debug(randomNumber(1, 9999999999999999999999));
+
+	const cmd: command = {
+		...command,
+		id: uid,
+	};
+
+	commands.set(cmd.command, cmd);
+	if (arrayContains(cmd.category, categories) === false) {
+		categories.push(cmd.category);
 	}
-	return command;
+	return cmd;
 }
 
 // deno-lint-ignore no-explicit-any
 function arrayContains(needle: string, arrhaystack: string | any[]) {
 	return arrhaystack.indexOf(needle) > -1;
+}
+
+function randomNumber(min: number, max: number) {
+	return Math.random() * (max - min) + min;
 }

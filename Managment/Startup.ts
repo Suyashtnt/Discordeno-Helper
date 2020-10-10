@@ -27,14 +27,14 @@ import { Intents } from 'https://x.nest.land/Discordeno@9.0.1/src/types/options.
 import { startup as startupInterface } from '../Types/startup.ts';
 import { message } from '../Types/message.ts';
 
-export const logger = new Logger().withMinLogLevel(Level.INFO);
+export const logger = new Logger().withMinLogLevel(Level.DEBUG);
 export let intents = [
 	Intents.GUILD_MESSAGES,
 	Intents.GUILDS,
 	Intents.DIRECT_MESSAGES,
 ];
 export let pf: string;
-const used = new Map();
+const used = new Map<number, number>();
 /**
  * Starts up your bot
  * @param token Your Bot Token
@@ -52,23 +52,48 @@ export async function startup({
 }: startupInterface) {
 	await importDirectory(Deno.realPathSync(imports.cmdDir));
 	await importDirectory(Deno.realPathSync(imports.monitorDir));
+	let allIDs: number[] = [];
+	await Promise.resolve(
+		commands.forEach((cmd) => {
+			if (cmd.id) {
+				if (arrayContains(cmd.id, allIDs)) {
+					throw new Error('2 commands have the same ID. Will now terminate');
+				}
+				allIDs.push(cmd.id);
+			} else {
+				throw new Error('This command does not have an ID. Will now terminate');
+			}
+		})
+	);
 	createClient({
 		token,
 		intents,
 		eventHandlers: {
 			ready: () => logger.info('bot started!'),
-			messageCreate: async (msg) => {
-				if (msg.author.bot) {
+			messageCreate: async (mssg) => {
+				if (mssg.author.bot) {
 					return;
 				}
 				const dbGet = logger.debug(
-					await getPrefix(msg.guildID),
+					await getPrefix(mssg.guildID),
 					'get prefix from db'
 				);
 				pf = logger.debug(
 					useMongoDB ? (dbGet ? dbGet : prefix) : prefix,
 					'the current prefix'
 				);
+
+				const guild =
+					mssg.guildID != '' ? cache.guilds.get(mssg.guildID) : undefined;
+
+				const msg: message = {
+					...mssg,
+					channel: cache.channels.get(mssg.channelID),
+					guild,
+					reply: (mssg) =>
+						sendMessage(msg.channelID, `<@${msg.author.id}> ${mssg}`),
+					return: (mssg) => sendMessage(msg.channelID, mssg),
+				};
 
 				monitors.map(async (monitor) => {
 					logger.debug('running ' + monitor.desc);
@@ -116,9 +141,10 @@ export async function startup({
 							type: 'cmd name',
 						});
 
-						const cooldown = used.get(msg.author.id);
-						const guild =
-							msg.guildID != '' ? cache.guilds.get(msg.guildID) : undefined;
+						const cooldown = logger.debug(
+							used.get(Number(msg.author.id) + (cmd.id ? cmd.id : 0)),
+							'cooldown'
+						);
 
 						if (
 							msg.content.startsWith(cmd.customPrefix ? cmd.customPrefix : pf)
@@ -129,44 +155,47 @@ export async function startup({
 									msg.channelID,
 									`You need to wait ${remaining} before using this command again!`
 								);
-							} else if (
-								(cmd.command == CommandName ||
-									(cmd.aliases != undefined &&
-										arrayContains(
-											CommandName ? CommandName : 'this should not happen',
-											cmd.aliases
-										))) &&
-								(cmd.inhibitors
-									? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
-									: true)
-							) {
-								if (guild ? await checkForPerms(cmd, msg, guild) : true) {
-									const newMessge: message = {
-										...msg,
-										channel: cache.channels.get(msg.channelID),
-										guild,
-										reply: (mssg) =>
-											sendMessage(msg.channelID, `<@${msg.author.id}> ${mssg}`),
-										return: (mssg) => sendMessage(msg.channelID, mssg),
-									};
-									logger.info(
-										`running ${cmd.command} in ${
-											cache.guilds.get(msg.guildID)?.name
-										}(channel is ${
-											cache.channels.get(msg.channelID)?.name
-										}) for ${msg.author.username}`
-									);
-									cmd.runs(newMessge, Args);
-									used.set(
-										msg.author.id,
-										Date.now() + (cmd.cooldown ? cmd.cooldown : 0)
-									);
-									setTimeout(
-										() => {
-											used.delete(msg.author.id);
-										},
-										cmd.cooldown ? cmd.cooldown : 0
-									);
+							} else {
+								if (
+									(cmd.command == CommandName ||
+										(cmd.aliases != undefined &&
+											arrayContains(
+												CommandName ? CommandName : 'this should not happen',
+												cmd.aliases
+											))) &&
+									(cmd.inhibitors
+										? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
+										: true)
+								) {
+									if (guild ? await checkForPerms(cmd, msg, guild) : true) {
+										logger.info(
+											`running ${cmd.command} in ${
+												cache.guilds.get(msg.guildID)?.name
+											}(channel is ${
+												cache.channels.get(msg.channelID)?.name
+											}) for ${msg.author.username}`
+										);
+										cmd.runs(msg, Args);
+										logger.debug(cmd.cooldown, 'cooldown of cmd');
+										used.set(
+											logger.debug(
+												Number(msg.author.id) + (cmd.id ? cmd.id : 0)
+											),
+											Date.now() + (cmd.cooldown ? cmd.cooldown : 0)
+										);
+										logger.debug(used, 'used map');
+										logger.debug(
+											used.get(Number(msg.author.id) + (cmd.id ? cmd.id : 0))
+										);
+										setTimeout(
+											() => {
+												used.delete(
+													Number(msg.author.id) + (cmd.id ? cmd.id : 0)
+												);
+											},
+											cmd.cooldown ? cmd.cooldown : 0
+										);
+									}
 								}
 							}
 						}
@@ -187,14 +216,14 @@ export async function startup({
 }
 
 // deno-lint-ignore no-explicit-any
-function arrayContains(needle: string, arrhaystack: string | any[]) {
+function arrayContains(needle: any, arrhaystack: string | any[]) {
 	return arrhaystack.indexOf(needle) > -1;
 }
 
 // deno-lint-ignore no-explicit-any
 async function testInhibitors(
 	array: inhibitor[],
-	args: [cmd: command, msg: Message, args: string[]]
+	args: [cmd: command, msg: message, args: string[]]
 ) {
 	let AllWorking = true;
 
