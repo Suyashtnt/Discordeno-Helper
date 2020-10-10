@@ -1,7 +1,7 @@
 // deno-lint-ignore-file
-import { Message } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts';
-import { Channel } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/channel.ts';
-import { Guild } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/guild.ts';
+import type { Message } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts';
+import type { Channel } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/channel.ts';
+import type { Guild } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/guild.ts';
 
 /**
  * custom interface for messages based on the original one

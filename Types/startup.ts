@@ -1,4 +1,4 @@
-import { EventHandlers } from './eventHandlers.ts';
+import type { EventHandlers } from './eventHandlers.ts';
 /**
  * Interface for starting up the bot
  */

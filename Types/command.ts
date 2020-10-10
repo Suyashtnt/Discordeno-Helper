@@ -1,8 +1,8 @@
 // deno-lint-ignore-file
 import type { Message } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts';
-import { Permission } from 'https://x.nest.land/Discordeno@9.0.1/src/types/permission.ts';
-import { inhibitor } from './inhibitor.ts';
-import { message } from './message.ts';
+import type { Permission } from 'https://x.nest.land/Discordeno@9.0.1/src/types/permission.ts';
+import type { inhibitor } from './inhibitor.ts';
+import type { message } from './message.ts';
 
 /**
  * Type used for CreateCommand

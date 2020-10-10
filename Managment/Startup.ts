@@ -1,7 +1,16 @@
 // deno-lint-ignore-file
 import { commands } from '../Storage/commands.ts';
-import { command } from '../Types/command.ts';
-import { Level, Logger } from 'https://deno.land/x/optic/mod.ts';
+import type { command } from '../Types/command.ts';
+import {
+	ColorRule,
+	ConsoleStream,
+	Formatter,
+	getColorForLevel,
+	Level,
+	levelToName,
+	Logger,
+	LogRecord,
+} from 'https://deno.land/x/optic@0.19/mod.ts';
 import { cache } from 'https://x.nest.land/Discordeno@9.0.1/src/utils/cache.ts';
 import {
 	getPrefix,
@@ -21,13 +30,29 @@ import {
 	Permission,
 	Permissions,
 } from 'https://x.nest.land/Discordeno@9.0.1/src/types/permission.ts';
-import { Guild } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/guild.ts';
+import type { Guild } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/guild.ts';
 import createClient from 'https://x.nest.land/Discordeno@9.0.1/src/module/client.ts';
 import { Intents } from 'https://x.nest.land/Discordeno@9.0.1/src/types/options.ts';
-import { startup as startupInterface } from '../Types/startup.ts';
-import { message } from '../Types/message.ts';
+import type { startup as startupInterface } from '../Types/startup.ts';
+import type { message } from '../Types/message.ts';
 
-export const logger = new Logger().withMinLogLevel(Level.INFO);
+class MyFormatter implements Formatter<String> {
+	format(logRecord: LogRecord): string {
+		const colourize = getColorForLevel(logRecord.level);
+		let time = logRecord.dateTime.toLocaleDateString().split(' ');
+		time.splice(0, 1);
+		return colourize(
+			`${levelToName(logRecord.level)}: ${time.join(' ')} ${
+				logRecord.dateTime.toLocaleTimeString().split(' ')[0]
+			} > ${logRecord.msg} ${
+				String(logRecord.metadata) === '' ? '' : `| ${logRecord.metadata}`
+			}`
+		);
+	}
+}
+
+export const logger = new Logger().withMinLogLevel(Level.Info);
+logger.addStream(new ConsoleStream().withFormat(new MyFormatter()));
 export let intents = [
 	Intents.GUILD_MESSAGES,
 	Intents.GUILDS,

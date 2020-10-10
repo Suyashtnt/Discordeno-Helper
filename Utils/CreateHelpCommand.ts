@@ -2,8 +2,8 @@ import { categories, commands } from '../Storage/commands.ts';
 import { createCommand } from './CreateCommand.ts';
 import { MessageEmbed } from './embed.ts';
 import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts';
-import { logger, pf } from '../Managment/Startup.ts';
-import { command } from '../mod.ts';
+import { pf } from '../Managment/Startup.ts';
+import type { command } from '../mod.ts';
 
 // inspired by my own bot https://i.imgur.com/6hfNkZl.png
 /**
@@ -21,7 +21,6 @@ export function createHelpCommand(
 		desc: 'Help command',
 		aliases: aliases ? aliases : undefined,
 		runs: async (msg, args) => {
-			logger.info(categories);
 			const helpBody = new MessageEmbed();
 
 			helpBody.setTitle('All commands');
@@ -50,7 +49,7 @@ export function createHelpCommand(
 					const embed = new MessageEmbed();
 					await Promise.all(
 						categories.map(async (cate) => {
-							let currentCmds: command[] = [];
+							const currentCmds: command[] = [];
 
 							commands.forEach((cmd) => {
 								if (cmd.category === cate) {
@@ -61,9 +60,9 @@ export function createHelpCommand(
 							const fields = await Promise.all(
 								currentCmds.map((cmd) => {
 									if (!cmd.args) {
-										return `\`${cmd.command}\` - ${cmd.desc}`;
+										return `\`${pf}${cmd.command}\` - ${cmd.desc}`;
 									} else {
-										return `\`${cmd.command} ${cmd.args.join(' ')}\` - ${
+										return `\`${pf}${cmd.command} ${cmd.args.join(' ')}\` - ${
 											cmd.desc
 										}`;
 									}

@@ -26,7 +26,7 @@ export function createPrefixCommand(
 		aliases: aliases ? aliases : undefined,
 		runs: async (msg, args) => {
 			if (args && args[0]) {
-				db.setPrefix(args[0], msg.guildID).then(() =>
+				db.setPrefix(args.join(' '), msg.guildID).then(() =>
 					sendMessage(
 						msg.channelID,
 						// prettier-ignore

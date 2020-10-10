@@ -1,6 +1,6 @@
 import type { Message } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts';
-import { command } from './command.ts';
-import { message } from './message.ts';
+import type { command } from './command.ts';
+import type { message } from './message.ts';
 
 /**
  * The inhibitor type

@@ -13,7 +13,6 @@ export async function importDirectory(path: string) {
 		const currentPath = `${path}/${file.name}`;
 
 		if (file.isFile) {
-			// deno-lint-ignore no-undef
 			const cmd = await import(
 				`file:///${currentPath}#${uniqueFilePathCounter}`
 			);
