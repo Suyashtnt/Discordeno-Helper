@@ -27,7 +27,7 @@ import { Intents } from 'https://x.nest.land/Discordeno@9.0.1/src/types/options.
 import { startup as startupInterface } from '../Types/startup.ts';
 import { message } from '../Types/message.ts';
 
-export const logger = new Logger().withMinLogLevel(Level.DEBUG);
+export const logger = new Logger().withMinLogLevel(Level.INFO);
 export let intents = [
 	Intents.GUILD_MESSAGES,
 	Intents.GUILDS,
