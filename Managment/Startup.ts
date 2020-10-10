@@ -81,7 +81,7 @@ export async function startup({
 	await Promise.resolve(
 		commands.forEach((cmd) => {
 			if (cmd.id) {
-				if (arrayContains(cmd.id, allIDs)) {
+				if (allIDs.find((id) => id === cmd.id)) {
 					throw new Error('2 commands have the same ID. Will now terminate');
 				}
 				allIDs.push(cmd.id);
@@ -139,11 +139,14 @@ export async function startup({
 										)
 										.split(' ')[0]
 								) ||
-							arrayContains(
-								msg.content
-									.replace(command.customPrefix ? command.customPrefix : pf, '')
-									.split(' ')[0],
-								command.aliases ? command.aliases : []
+							(command.aliases ? command.aliases : []).find(
+								(alias) =>
+									msg.content
+										.replace(
+											command.customPrefix ? command.customPrefix : pf,
+											''
+										)
+										.split(' ')[0] === alias
 							)
 						) {
 							const out = commands.get(command.command);
@@ -182,15 +185,17 @@ export async function startup({
 								);
 							} else {
 								if (
-									(cmd.command == CommandName ||
-										(cmd.aliases != undefined &&
-											arrayContains(
-												CommandName ? CommandName : 'this should not happen',
-												cmd.aliases
-											))) &&
-									(cmd.inhibitors
-										? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
-										: true)
+									cmd.command == CommandName ||
+									(cmd.aliases != undefined &&
+										cmd.aliases.find(
+											(alias) =>
+												(CommandName
+													? CommandName
+													: 'this should not happen') === alias
+										) &&
+										(cmd.inhibitors
+											? await testInhibitors(cmd.inhibitors, [cmd, msg, Args])
+											: true))
 								) {
 									if (guild ? await checkForPerms(cmd, msg, guild) : true) {
 										logger.info(
@@ -238,11 +243,6 @@ export async function startup({
 			...eventHandlers,
 		},
 	});
-}
-
-// deno-lint-ignore no-explicit-any
-function arrayContains(needle: any, arrhaystack: string | any[]) {
-	return arrhaystack.indexOf(needle) > -1;
 }
 
 // deno-lint-ignore no-explicit-any
