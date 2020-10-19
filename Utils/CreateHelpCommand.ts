@@ -1,5 +1,5 @@
 import { categories, commands } from '../Storage/commands.ts';
-import { createCommand } from './CreateCommand.ts';
+import createCommand from './CreateCommand.ts';
 import { MessageEmbed } from './embed.ts';
 import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts';
 import { pf } from '../Managment/Startup.ts';
@@ -11,7 +11,7 @@ import type { command } from '../mod.ts';
  * @param commandPrefix The prefix for the help command
  * @param aliases Aliases for the help command
  */
-export function createHelpCommand(
+export default function createHelpCommand(
 	commandPrefix: string,
 	category: string,
 	aliases?: string[]

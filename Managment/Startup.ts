@@ -2,7 +2,6 @@
 import { commands } from '../Storage/commands.ts';
 import type { command } from '../Types/command.ts';
 import {
-	ColorRule,
 	ConsoleStream,
 	Formatter,
 	getColorForLevel,
@@ -12,12 +11,7 @@ import {
 	LogRecord,
 } from 'https://deno.land/x/optic@0.19/mod.ts';
 import { cache } from 'https://x.nest.land/Discordeno@9.0.1/src/utils/cache.ts';
-import {
-	getPrefix,
-	humanizeDelta,
-	importDirectory,
-	setPrefix,
-} from '../mod.ts';
+import { getPrefix, humanizeDelta, setPrefix } from '../mod.ts';
 import type { Message } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts';
 import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts';
 import type { inhibitor } from '../Types/inhibitor.ts';
@@ -35,6 +29,7 @@ import createClient from 'https://x.nest.land/Discordeno@9.0.1/src/module/client
 import { Intents } from 'https://x.nest.land/Discordeno@9.0.1/src/types/options.ts';
 import type { startup as startupInterface } from '../Types/startup.ts';
 import type { message } from '../Types/message.ts';
+import importDirectory from '../Utils/ImportFromDir.ts';
 
 class MyFormatter implements Formatter<String> {
 	format(logRecord: LogRecord): string {
@@ -67,7 +62,7 @@ const used = new Map<number, number>();
  * @param botID your bots id
  * @param useMongo If you are using the MongoDB prefix manager
  */
-export async function startup({
+export default async function startup({
 	botID,
 	prefix,
 	token,
@@ -334,18 +329,7 @@ async function checkForPerms(cmd: command, msg: Message, guild?: Guild) {
 	}
 	return true;
 }
-/**
- * Starts up your bot
- *
- * this is just startup but has a better name
- * @param token Your Bot Token
- * @param prefix The Bots prefix
- * @param botID your bots id
- * @param useMongo If you are using the MongoDB prefix manager
- */
-export function startBot(params: startupInterface) {
-	startup(params);
-}
+
 /**
  * Adds a bot intent
  * @see

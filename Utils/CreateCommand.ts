@@ -6,7 +6,7 @@ import type { command } from '../Types/command.ts';
  * Adds a command
  * @param command The command info
  */
-export async function createCommand(command: command) {
+export default async function createCommand(command: command) {
 	const uid = logger.debug(randomNumber(1, 1000000));
 
 	const cmd: command = {
