@@ -37,7 +37,7 @@ const config = {
     frontline: false,
     ignoreIndex: true,
     title:
-      "<div class='greenCircle'></div><a href='https://github.com/Suyashtnt/Discordeno-Helper'>discordeno helper</a><div class='greenCircle'></div>",
+      "<div class='greenCircle'></div><a href='https://github.com/Suyashtnt/Discordeno-Helper'>Discordeno Helper</a><div class='greenCircle'></div>",
   },
   siteMetadata: {
     title: 'Discordeno Helper',
