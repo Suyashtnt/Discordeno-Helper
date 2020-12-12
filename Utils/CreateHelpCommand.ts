@@ -4,7 +4,6 @@ import { MessageEmbed } from './embed.ts';
 import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts';
 import { pf } from '../Managment/Startup.ts';
 import type { command } from '../mod.ts';
-
 // inspired by dank memer
 /**
  * Creates a generative help command so you dont have to manually manage enteries or make one by yourself
@@ -41,6 +40,10 @@ export default function createHelpCommand(
 									.addField(
 										'aliases',
 										val.aliases ? val.aliases?.join(', ') : 'none'
+									)
+									.addField(
+										'cooldown',
+										val.cooldown ? val.cooldown.toString() : 'no cooldown'
 									),
 							});
 						}
