@@ -15,7 +15,7 @@ export default async function createCommand(command: command) {
 	};
 
 	commands.set(cmd.command, cmd);
-	if (categories.find((cate) => cate === cmd.category)) {
+	if (!categories.find((cate) => cate === cmd.category)) {
 		categories.push(cmd.category);
 	}
 	return cmd;
