@@ -1,4 +1,3 @@
-// deno-lint-ignore-file
 import type { Permission } from 'https://x.nest.land/Discordeno@9.4.0/src/types/permission.ts';
 import type { inhibitor } from './inhibitor.ts';
 import type { message } from './message.ts';
