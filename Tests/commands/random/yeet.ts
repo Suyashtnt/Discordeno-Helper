@@ -1,5 +1,5 @@
 import { createCommand } from '../../../mod.ts';
-import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts';
+import { sendMessage } from 'https://x.nest.land/Discordeno@9.4.0/src/handlers/channel.ts';
 import log from '../../inhibitors/log.ts';
 export default createCommand({
 	command: 'yeet',

@@ -1,4 +1,4 @@
-import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/mod.ts';
+import { sendMessage } from 'https://x.nest.land/Discordeno@9.4.0/mod.ts';
 import type { inhibitor as inhib } from '../Types/inhibitor.ts';
 const inhibitor: inhib = {
 	desc: 'guild only inhibitor',

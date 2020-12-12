@@ -1,5 +1,5 @@
-import type { MessageContent } from 'https://x.nest.land/Discordeno@9.0.1/src/types/channel.ts';
-import type { Message } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts';
+import type { MessageContent } from 'https://x.nest.land/Discordeno@9.4.0/src/types/channel.ts';
+import type { Message } from 'https://x.nest.land/Discordeno@9.4.0/src/structures/message.ts';
 import { command } from '../Types/command.ts';
 import createCommand from './CreateCommand.ts';
 import createPrefixCommand from './CreatePrefixCommand.ts';

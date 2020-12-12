@@ -10,23 +10,23 @@ import {
 	Logger,
 	LogRecord,
 } from 'https://deno.land/x/optic@0.19/mod.ts';
-import { cache } from 'https://x.nest.land/Discordeno@9.0.1/src/utils/cache.ts';
+import { cache } from 'https://x.nest.land/Discordeno@9.4.0/src/utils/cache.ts';
 import { getPrefix, humanizeDelta, setPrefix } from '../mod.ts';
-import type { Message } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts';
-import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts';
+import type { Message } from 'https://x.nest.land/Discordeno@9.4.0/src/structures/message.ts';
+import { sendMessage } from 'https://x.nest.land/Discordeno@9.4.0/src/handlers/channel.ts';
 import type { inhibitor } from '../Types/inhibitor.ts';
 import { monitors } from '../Storage/monitors.ts';
 import {
 	botHasPermission,
 	memberHasPermission,
-} from 'https://x.nest.land/Discordeno@9.0.1/src/utils/permissions.ts';
+} from 'https://x.nest.land/Discordeno@9.4.0/src/utils/permissions.ts';
 import {
 	Permission,
 	Permissions,
-} from 'https://x.nest.land/Discordeno@9.0.1/src/types/permission.ts';
-import type { Guild } from 'https://x.nest.land/Discordeno@9.0.1/src/structures/guild.ts';
-import createClient from 'https://x.nest.land/Discordeno@9.0.1/src/module/client.ts';
-import { Intents } from 'https://x.nest.land/Discordeno@9.0.1/src/types/options.ts';
+} from 'https://x.nest.land/Discordeno@9.4.0/src/types/permission.ts';
+import type { Guild } from 'https://x.nest.land/Discordeno@9.4.0/src/structures/guild.ts';
+import createClient from 'https://x.nest.land/Discordeno@9.4.0/src/module/client.ts';
+import { Intents } from 'https://x.nest.land/Discordeno@9.4.0/src/types/options.ts';
 import type { startup as startupInterface } from '../Types/startup.ts';
 import type { message } from '../Types/message.ts';
 import importDirectory from '../Utils/ImportFromDir.ts';

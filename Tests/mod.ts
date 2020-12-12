@@ -1,5 +1,5 @@
 import { connect, startup } from '../mod.ts';
-import { cache } from 'https://x.nest.land/Discordeno@9.0.1/src/utils/cache.ts';
+import { cache } from 'https://x.nest.land/Discordeno@9.4.0/src/utils/cache.ts';
 import { config } from 'https://deno.land/x/dotenv@v0.5.0/mod.ts';
 const env = config();
 connect(env.MONGOURL);
