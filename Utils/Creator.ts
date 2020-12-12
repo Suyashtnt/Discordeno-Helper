@@ -6,20 +6,8 @@ import createPrefixCommand from './CreatePrefixCommand.ts';
 import createHelpCommand from './CreateHelpCommand.ts';
 
 const creator = {
-	createCommand: (command: command) => createCommand(command),
-	CreatePrefixCommand: (
-		commandPrefix: string,
-		category: string,
-		aliases?: string[],
-		returnMsg?:
-			| ((msg: Message) => string | MessageContent)
-			| string
-			| MessageContent
-	) => createPrefixCommand(commandPrefix, category, aliases, returnMsg),
-	CreateHelpCommand: (
-		commandPrefix: string,
-		category: string,
-		aliases?: string[]
-	) => createHelpCommand(commandPrefix, category, aliases),
+	createCommand: createCommand,
+	CreatePrefixCommand: createPrefixCommand,
+	CreateHelpCommand: createHelpCommand,
 };
 export default creator;

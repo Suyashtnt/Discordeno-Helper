@@ -1,4 +1,4 @@
-import { createMonitor } from '../../Utils/createMonitor.ts';
+import { createMonitor } from '../../mod.ts';
 
 export default createMonitor({
 	desc: 'logs command',
