@@ -1,4 +1,6 @@
+import startup from './Managment/Startup.ts';
 export * from './Managment/Startup.ts';
+export { startup };
 export * from './Utils/CreateCommand.ts';
 export * from './Utils/CreateHelpCommand.ts';
 export * from './Utils/embed.ts';
