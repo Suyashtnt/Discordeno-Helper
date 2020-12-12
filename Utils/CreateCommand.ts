@@ -15,15 +15,10 @@ export default async function createCommand(command: command) {
 	};
 
 	commands.set(cmd.command, cmd);
-	if (arrayContains(cmd.category, categories) === false) {
+	if (categories.find((cate) => cate === cmd.category)) {
 		categories.push(cmd.category);
 	}
 	return cmd;
-}
-
-// deno-lint-ignore no-explicit-any
-function arrayContains(needle: string, arrhaystack: string | any[]) {
-	return arrhaystack.indexOf(needle) > -1;
 }
 
 function randomNumber(min: number, max: number) {
