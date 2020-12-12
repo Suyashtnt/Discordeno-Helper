@@ -1,4 +1,4 @@
-import { EventHandlers as OldEvents } from 'https://x.nest.land/Discordeno@9.0.1/src/types/options.ts';
+import type { EventHandlers as OldEvents } from 'https://x.nest.land/Discordeno@9.0.1/src/types/options.ts';
 
 /**
  * Event Handlers minus ones the bot uses

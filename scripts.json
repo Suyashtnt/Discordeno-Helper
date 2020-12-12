@@ -1,8 +1,8 @@
 {
-	"$schema": "https://deno.land/x/denon/schema.json",
+	"$schema": "https://cdn.deno.land/denon/versions/2.4.2/raw/schema.json",
 	"scripts": {
 		"start": {
-			"cmd": "deno run --allow-net --allow-write --allow-read --allow-plugin --unstable --config=tsconfig.json tests/mod.ts",
+			"cmd": "deno run --allow-net --allow-write --allow-read --allow-plugin --unstable tests/mod.ts",
 			"desc": "run my app.ts file"
 		}
 	},

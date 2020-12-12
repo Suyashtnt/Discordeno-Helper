@@ -1,4 +1,4 @@
-import { createCommand } from './CreateCommand.ts';
+import createCommand from './CreateCommand.ts';
 import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts';
 import * as db from '../db/db.ts';
 import type { MessageContent } from 'https://x.nest.land/Discordeno@9.0.1/src/types/channel.ts';
@@ -10,8 +10,9 @@ import guildOnly from '../inhibitors/guildOnly.ts';
  * @param aliases The command aliases
  * @param returnMsg A custom return message
  */
-export function createPrefixCommand(
+export default function createPrefixCommand(
 	commandPrefix: string,
+	category: string,
 	aliases?: string[],
 	returnMsg?:
 		| ((msg: Message) => string | MessageContent)
@@ -25,14 +26,11 @@ export function createPrefixCommand(
 		aliases: aliases ? aliases : undefined,
 		runs: async (msg, args) => {
 			if (args && args[0]) {
-				db.setPrefix(args[0], msg.guildID).then(() =>
+				db.setPrefix(args.join(' '), msg.guildID).then(() =>
 					sendMessage(
 						msg.channelID,
-						returnMsg
-							? typeof returnMsg === 'function'
-								? returnMsg(msg)
-								: returnMsg
-							: 'Updated successully'
+						// prettier-ignore
+						returnMsg ? typeof returnMsg === 'function' ? returnMsg(msg) : returnMsg : 'Updated successully'
 					)
 				);
 			} else {
@@ -41,5 +39,6 @@ export function createPrefixCommand(
 		},
 		userPerms: ['ADMINISTRATOR'],
 		inhibitors: [guildOnly],
+		category,
 	});
 }

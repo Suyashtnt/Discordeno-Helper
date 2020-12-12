@@ -1,35 +1,33 @@
-import { commands } from '../Storage/commands.ts';
-import { createCommand } from './CreateCommand.ts';
+import { categories, commands } from '../Storage/commands.ts';
+import createCommand from './CreateCommand.ts';
 import { MessageEmbed } from './embed.ts';
 import { sendMessage } from 'https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts';
-import { prefix } from '../Managment/Startup.ts';
+import { pf } from '../Managment/Startup.ts';
+import type { command } from '../mod.ts';
 
-// inspired by my own bot https://i.imgur.com/6hfNkZl.png
+// inspired by dank memer
 /**
  * Creates a generative help command so you dont have to manually manage enteries or make one by yourself
  * @param commandPrefix The prefix for the help command
  * @param aliases Aliases for the help command
  */
-export function createHelpCommand(commandPrefix: string, aliases?: string[]) {
+export default function createHelpCommand(
+	commandPrefix: string,
+	category: string,
+	aliases?: string[]
+) {
 	createCommand({
 		command: commandPrefix,
 		desc: 'Help command',
 		aliases: aliases ? aliases : undefined,
-		runs: (msg, args) => {
+		runs: async (msg, args) => {
 			const helpBody = new MessageEmbed();
 
 			helpBody.setTitle('All commands');
 			if (args) {
 				if (args[0]) {
 					console.log(args[0]);
-					commands.map((val) => {
-						console.log(
-							(val.command === args[0] ||
-								(val.aliases ? val.aliases : '') === args[0]) +
-								' cmd name is' +
-								val.command
-						);
-
+					commands.forEach((val) => {
 						if (
 							val.command === args[0] ||
 							(val.aliases ? val.aliases : '') === args[0]
@@ -37,7 +35,7 @@ export function createHelpCommand(commandPrefix: string, aliases?: string[]) {
 							sendMessage(msg.channelID, {
 								embed: new MessageEmbed()
 									.setTitle(
-										val.command + ' ' + (val.args ? val.args.join(' ') : '')
+										`${val.command} ${val.args ? val.args.join(' ') : ''}`
 									)
 									.setDescription(val.desc)
 									.addField(
@@ -48,36 +46,37 @@ export function createHelpCommand(commandPrefix: string, aliases?: string[]) {
 						}
 					});
 				} else {
-					commands.map((val) => {
-						if (val.args) {
-							const args = val.args.join(' ');
-							helpBody.addField(
-								`\`${val.customPrefix ? val.customPrefix : prefix}${
-									val.command
-								} ${args} \``,
-								val.desc,
-								true
+					const embed = new MessageEmbed();
+					await Promise.all(
+						categories.map(async (cate) => {
+							const currentCmds: command[] = [];
+
+							commands.forEach((cmd) => {
+								if (cmd.category === cate) {
+									currentCmds.push(cmd);
+								}
+							});
+
+							const fields = await Promise.all(
+								currentCmds.map((cmd) => {
+									if (!cmd.args) {
+										return `\`${pf}${cmd.command}\` - ${cmd.desc}`;
+									} else {
+										return `\`${cmd.customPrefix ? cmd.customPrefix : pf}${
+											cmd.command
+										} ${cmd.args.join(' ')}\` - ${cmd.desc}`;
+									}
+								})
 							);
-						} else {
-							helpBody.addField(
-								`\`${val.customPrefix ? val.customPrefix : prefix}${
-									val.command
-								}\``,
-								val.desc,
-								true
-							);
-						}
-					});
+							embed.addField(cate, fields.join('\n'), true);
+						})
+					);
 					sendMessage(msg.channelID, {
-						embed: helpBody,
+						embed: embed,
 					});
 				}
 			}
 		},
+		category,
 	});
-}
-
-// deno-lint-ignore no-explicit-any
-function arrayContains(needle: string, arrhaystack: string | any[]) {
-	return arrhaystack.indexOf(needle) > -1;
 }

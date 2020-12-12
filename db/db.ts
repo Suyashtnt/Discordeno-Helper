@@ -3,12 +3,15 @@ import {
 	MongoClient,
 } from 'https://deno.land/x/mongo@v0.12.1/mod.ts';
 import type { PrefixSchema } from './schemas/prefix.ts';
-const client = new MongoClient();
+/**
+ * the db client
+ */
+export const client = new MongoClient();
 let db;
 let prefixes: Collection<PrefixSchema>;
 
 /**
- * Connects to the database. Run this BEFORE your bot starts up
+ * Connects to the database. Run this BEFORE you run `startBot`
  * @param url Your mongoDB url
  */
 export function connect(url: string) {
@@ -36,7 +39,7 @@ export async function setPrefix(prefix: string, guildID: string) {
 }
 
 /**
- * Gets the prefix =for a certain guild
+ * Gets the prefix for a certain guild
  * @param guildID The guilds ID
  */
 export async function getPrefix(guildID: string) {

@@ -4,7 +4,6 @@ import type {
 	EmbedAuthor,
 	EmbedField,
 	EmbedFooter,
-	Embed,
 } from 'https://x.nest.land/Discordeno@9.0.1/src/types/message.ts';
 
 /**
