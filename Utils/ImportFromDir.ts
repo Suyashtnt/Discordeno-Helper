@@ -4,7 +4,7 @@ let uniqueFilePathCounter = 0;
  * loads all commands from that directory
  * @param path the path
  */
-export async function importDirectory(path: string) {
+async function importDirectory(path: string) {
 	const files = Deno.readDirSync(Deno.realPathSync(path));
 
 	for (const file of files) {
@@ -13,7 +13,6 @@ export async function importDirectory(path: string) {
 		const currentPath = `${path}/${file.name}`;
 
 		if (file.isFile) {
-			// deno-lint-ignore no-undef
 			const cmd = await import(
 				`file:///${currentPath}#${uniqueFilePathCounter}`
 			);
@@ -24,3 +23,4 @@ export async function importDirectory(path: string) {
 	}
 	uniqueFilePathCounter++;
 }
+export default importDirectory;

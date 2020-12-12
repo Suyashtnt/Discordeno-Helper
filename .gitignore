@@ -1,1 +1,3 @@
 .env
+dependencies
+.deno_plugins/

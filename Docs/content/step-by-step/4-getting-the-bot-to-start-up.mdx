@@ -1,0 +1,157 @@
+---
+title: 'Starting the bot'
+metaTitle: 'Starting the bot | Discordeno helper'
+metaDescription: 'setting up mongoDB, adding the environment variables and starting up the bot'
+---
+
+# Prerequisites
+
+Right now, I assume that you have a discord bot token and a server with the bot in it.
+
+If you are going to use the MongoDB part of this tutorial first create a MongoDB account at <https://account.mongodb.com/account/register>
+
+# Setting up MongoDB
+
+(This step is required if you are using the prefix manager, if not skip this)
+MongoDB is a document database, so all things are just JSON files with IDs. It is fast, ACID compliant and is easy to use. We use this for custom prefixes per-guild
+
+## Creating the Cluster
+
+first, head to <https://www.mongodb.com/> and sign in, you should be greeted with something like this:
+
+![picture](https://i.imgur.com/ioRzgnZ.png)
+
+Now, click `Build a Cluster` and select `Shared Clusters`. This is a free cluster on the cloud.
+
+Make all setting to default and then click `Create Cluster`
+
+## Configuring the Cluster
+
+Now that you have a cluster, it's time to configure it with network access and a user.
+
+### Allowing access to your computer
+
+Go to Network access on the left of your screen, then click `Add an IP address`. Select `Add current IP address` and click `Confirm`. Atlas is configured to only allow access to requests from the IP, so if you want to run your server somewhere else make sure to add its IP or allow access from anywhere.
+
+![picture](https://i.imgur.com/dteKGzu.png)
+
+### Creating a user
+
+Now that your pc has access to the cluster, it's time to make a user so you can sign into it and make requests.
+
+Go to database access, and then click `Add New Database user`
+
+Make the username `bot`(or whatever you want, it must not contain spaces) and the password Something secure, but it must be Alpha-numerical(Letters and Numbers only). Then click `Add User`
+
+## Creating the .env file
+
+Now it's time to add all necessary info to the `.env` file to start up the bot
+
+Open up your project with VSC
+
+![gif](https://i.imgur.com/BcRXFgr.gif)
+
+click on the `.env.example` file and rename it(keybinding is `F2`) to `.env`
+
+Now, the contents should look something like this:
+
+```env
+TOKEN=
+MONGOURL=
+POPCORNAPIKEY=
+```
+
+Unless you have an API key for popcorn API(DM the owner of the help server for one) remove the last line.
+
+```env
+TOKEN=
+MONGOURL=
+- POPCORNAPIKEY=
+```
+
+### Adding the token
+
+Now, set the `TOKEN` variable to your bots token from the discord developer dashboard
+
+```env
++ TOKEN=YourBotToken
+MONGOURL=
+```
+
+### Setting up the mongoDB url
+
+(this step is required if you want to setup the prefix manager, else skip this and remove `MONGOURL=` from the `.env` file)
+
+We now need to get the MongoDB connection URL, this is how you will connect to the database. Open up mongoDB and you should see your cluster. Now click connect and then `Connect your application`. Set the driver to NodeJS(Deno's MongoDB Driver is compatible with the URL) and the version to `3.6 or later` and copy the connection string, now paste it into the `.env file`
+
+```env
+TOKEN=YourBotToken
++ MONGOURL=mongodb+srv://bot:<password>@cluster0.olchl.mongodb.net/<dbname>?retryWrites=true&w=majority
+```
+
+Replace `<password>` with the password of the user(I will use `Something` as an example) and `<dbname>` with `prefixes`
+
+```env
+TOKEN=YourBotToken
+MONGOURL=mongodb+srv://bot:Something@cluster0.olchl.mongodb.net/prefixes?retryWrites=true&w=majority
+                           ^^^^^^^^^                            ^^^^^^^^
+```
+
+Your bot is now ready to start!
+
+## IF YOU DID NOT DO MONGODB READ THIS
+
+In the main bot file, you need to disable mongoDB, its pretty simple
+
+You remove the connect command and change true to false in startup. here is how it looks
+
+Before:
+
+```ts
+import { config } from 'https://deno.land/x/dotenv/mod.ts';
+import { startup, importDirectory, connect } from './deps.ts';
+
+const env = config();
+
+connect(env.MONGOURL);
+importDirectory(Deno.realPathSync('./commands'));
+importDirectory(Deno.realPathSync('./monitors'));
+startup(env.TOKEN, 'test.', '730853325418922095', true);
+```
+
+After:
+
+```ts
+import { config } from 'https://deno.land/x/dotenv/mod.ts';
+import { startup, importDirectory, connect } from './deps.ts';
+
+const env = config();
+
+- connect(env.MONGOURL);
+importDirectory(Deno.realPathSync('./commands'));
+importDirectory(Deno.realPathSync('./monitors'));
+startup(env.TOKEN, 'test.', '730853325418922095', false);
+                                                  ^^^^^
+```
+
+![gif](https://i.imgur.com/EzBYFNI.gif)
+
+Remember to save!
+
+## Starting the bot
+
+It's finally time to start up the bot! I assume you have deno install and the `deno` command works
+
+First, we are going to install [denon](https://deno.land/x/denon). It's a Deno script that automatically restarts Deno when you change a file
+
+To install(as of 12 Oct 2020) run this in cmd:
+
+```sh
+deno install -qAf --unstable https://deno.land/x/denon@2.4.4/denon.ts
+```
+
+this install denon, you should now be able to run `denon --help` and not get an error. Now, lets start!
+
+In VSC, you can press `` Ctrl + ` ``(the key underneath the Escape key) or `F1 -> Toggle integrated terminal` to see a terminal pop up in the directory of your bot. In there, run `denon start`
+
+Your bot is now started! In the discord server with the bot run `test.help` to see all the commands it has

@@ -18,12 +18,12 @@ const DURATION_MAPPING: Mapping = {
 export function humanizeDelta(delta: number) {
 	let d = delta;
 	// deno-lint-ignore no-explicit-any
-	let durations: any[] = [];
+	const durations: any[] = [];
 
 	Object.entries(DURATION_MAPPING).forEach(([durationKey, duration]) => {
 		if (duration <= d) {
 			duration *= 1000;
-			let count: number = Math.floor(d / duration);
+			const count: number = Math.floor(d / duration);
 
 			d -= duration * count;
 			if (count) {
@@ -39,8 +39,8 @@ export function stringToSeconds(amount: string) {
 	if (!amount) {
 		return 0;
 	}
-	let value = (amount.match(/\d+/) || [])[0];
-	let key = (amount.match(/[a-z]/) || [])[0];
+	const value = (amount.match(/\d+/) || [])[0];
+	const key = (amount.match(/[a-z]/) || [])[0];
 
 	if (!value || !key) {
 		return 0;

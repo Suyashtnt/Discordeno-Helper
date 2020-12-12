@@ -33,4 +33,6 @@ Basic commands can be found in the `Tests` directory. There is also a [template]
 
 ## import URL
 
-<https://x.nest.land/discordeno-helper@2.4.0/mod.ts>
+<https://x.nest.land/discordeno-helper@3.0.0/mod.ts>
+
+looking for a more OOP library? check out <https://github.com/ayntee/dencord-starter> (not made by me just looks really cool)
