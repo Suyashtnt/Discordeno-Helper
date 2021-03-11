@@ -1,4 +1,6 @@
 # Discordeno-Helper
+# WARNING: IS DEAD
+Discordeno has moved on from being small and the offical boilerplate is a LOT better than this. use that instead
 
 ## A framework for discordeno
 
